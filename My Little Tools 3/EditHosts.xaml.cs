@@ -12,6 +12,7 @@ namespace MyLittleTools3
     public partial class EditHosts : Window
     {
         String Hfile = Environment.SystemDirectory + @"\drivers\etc\hosts";
+        String Hfile_bk = Environment.SystemDirectory + @"\drivers\etc\hosts.bk";
 
         public EditHosts()
         {
@@ -36,9 +37,8 @@ namespace MyLittleTools3
 
         private void LoadHost()
         {
-            StreamReader sr = new StreamReader(Hfile, Encoding.Default);
-            HEditor.Text = sr.ReadToEnd();
-            sr.Close();
+            String text = File.ReadAllText(Hfile);
+            HEditor.Text = text;
             checklastline();
             HEditor.ScrollToEnd();
             HEditor.Select(HEditor.Text.Length, 0);
@@ -61,9 +61,28 @@ namespace MyLittleTools3
             }
         }
 
+        private void LoadPreset(String filename)
+        {
+            String pfile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, filename);
+            if (File.Exists(pfile))
+            {
+                String text = File.ReadAllText(pfile);
+                HEditor.Text = text;
+            }
+            else
+            {
+                HEditor.Text = "文件载入失败";
+            }
+        }
+
         private void HostsEditor_Loaded(object sender, RoutedEventArgs e)
         {
             LoadHost();
+        }
+
+        private void SavaHostsExecuted(object sender, ExecutedRoutedEventArgs e)
+        {
+            SaveHost();
         }
 
         private void btnHostsSave_Click(object sender, RoutedEventArgs e)
@@ -76,12 +95,21 @@ namespace MyLittleTools3
             LoadHost();
         }
 
-        private void SavaHostsExecuted(object sender, ExecutedRoutedEventArgs e)
+        private void btnHostsBackup_Click(object sender, RoutedEventArgs e)
         {
-            SaveHost();
+            LoadHost();
         }
 
+        private void btnHostsPreset1_Click(object sender, RoutedEventArgs e)
+        {
+            LoadPreset("hosts.p1");
 
+        }
+
+        private void btnHostsPreset2_Click(object sender, RoutedEventArgs e)
+        {
+            LoadPreset("hosts.p2");
+        }
 
     }
 }
