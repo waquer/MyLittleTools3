@@ -17,12 +17,13 @@ namespace MyLittleTools3
         MyJumpList myJumpList = new MyJumpList();
         MyFileTool myFileTool = new MyFileTool();
 
-        public MainWindow()
+        public MainWindow(int tabidx=0)
         {
             InitializeComponent();
             btnUpdateSelf.Content = App.ResourceAssembly.GetName(false).Version;
             lsvJumpList.ItemsSource = myJumpList.JTData;
             ListFiles.ItemsSource = myFileTool.fileList;
+            tabMain.SelectedIndex = tabidx;
         }
 
         #region 跳转列表
@@ -334,13 +335,6 @@ namespace MyLittleTools3
         #endregion
 
         
-
-        
-
-
-
-
-
 
     }
 }

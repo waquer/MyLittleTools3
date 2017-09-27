@@ -15,23 +15,20 @@ namespace MyLittleTools3
     {
         protected override void OnStartup(StartupEventArgs e)
         {
-            if (e.Args.Length > 0)
+            String arg = e.Args.Length > 0 ? e.Args[0].ToLower() : "";
+            if (arg == "-edithosts")
             {
-                switch (e.Args[0].ToLower())
-                {
-                    case "-edithosts":
-                        EditHosts editHosts = new EditHosts();
-                        editHosts.Show();
-                        break;
-                    default:
-                        MainWindow mainWindow = new MainWindow();
-                        mainWindow.Show();
-                        break;
-                }
+                EditHosts editHosts = new EditHosts();
+                editHosts.Show();
             }
             else
             {
-                MainWindow mainWindow = new MainWindow();
+                int tabidx = 0;
+                if (arg == "-rename")
+                {
+                    tabidx = 2;
+                }
+                MainWindow mainWindow = new MainWindow(tabidx);
                 mainWindow.Show();
             }
         }
