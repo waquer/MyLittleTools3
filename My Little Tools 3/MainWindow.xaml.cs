@@ -191,7 +191,11 @@ namespace MyLittleTools3
                 codeTool.CodeCharset = "UTF-8";
             }
 
-            if (rbCodeMD5.IsChecked == true)
+            if(rbCodeURL.IsChecked == true)
+            {
+                codeTool.CodeMethod = "URL";
+            }
+            else if (rbCodeMD5.IsChecked == true)
             {
                 codeTool.CodeMethod = "MD5";
             }
@@ -199,15 +203,19 @@ namespace MyLittleTools3
             {
                 codeTool.CodeMethod = "SHA1";
             }
+            else if (rbCodeSHA256.IsChecked == true)
+            {
+                codeTool.CodeMethod = "SHA256";
+            }
             else if (rbCodeBASE64.IsChecked == true)
             {
                 codeTool.CodeMethod = "BASE64";
             }
             else
             {
-                codeTool.CodeMethod = "URL";
+                tbCodeOutput.Text = "编码方式无效";
+                return;
             }
-
             tbCodeOutput.Text = codeTool.DoCoding();
         }
 

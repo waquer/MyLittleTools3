@@ -9,7 +9,7 @@ namespace MyLittleTools3
     class MyJumpList
     {
 
-        public ObservableCollection<JumpTask> JTData = new ObservableCollection<JumpTask>();
+        private ObservableCollection<JumpTask> JTData = new ObservableCollection<JumpTask>();
         private JumpList jumpList = JumpList.GetJumpList(App.Current);
 
         public MyJumpList()
@@ -102,20 +102,20 @@ namespace MyLittleTools3
         {
             String appPath = System.Reflection.Assembly.GetEntryAssembly().Location;
 
-            String[,] argarry =
+            String[,] argArray =
             {
                 {"修改Hosts","-edithosts"}
             };
 
-            for (int i = 0; i < argarry.GetLength(0); i++)
+            for (int i = 0; i < argArray.GetLength(0); i++)
             {
                 JumpTask jumpTask = new JumpTask
                 {
                     ApplicationPath = appPath,
                     IconResourcePath = appPath,
-                    Title = argarry[i, 0],
-                    Description = argarry[i, 0],
-                    Arguments = argarry[i, 1]
+                    Title = argArray[i, 0],
+                    Description = argArray[i, 0],
+                    Arguments = argArray[i, 1]
                 };
                 this.jumpList.JumpItems.Add(jumpTask);
             }

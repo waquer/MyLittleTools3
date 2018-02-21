@@ -67,6 +67,9 @@ namespace MyLittleTools3
                 case "SHA1":
                     algorithm = SHA1.Create();
                     break;
+                case "SHA256":
+                    algorithm = SHA256.Create();
+                    break;
                 default:
                     return "暂不支持";
             }

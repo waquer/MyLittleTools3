@@ -76,6 +76,7 @@
                                 <RadioButton x:Name="rbCodeURL" Content="URL" HorizontalAlignment="Left" GroupName="codeMethod" IsChecked="True" />
                                 <RadioButton x:Name="rbCodeMD5" Content="MD5" HorizontalAlignment="Left" Margin="0,5,0,0" GroupName="codeMethod"  />
                                 <RadioButton x:Name="rbCodeSHA1" Content="SHA1" HorizontalAlignment="Left" Margin="0,5,0,0" GroupName="codeMethod" />
+                                <RadioButton x:Name="rbCodeSHA256" Content="SHA256" HorizontalAlignment="Left" Margin="0,5,0,0" GroupName="codeMethod" />
                                 <RadioButton x:Name="rbCodeBASE64" Content="BASE64" HorizontalAlignment="Left" Margin="0,5,0,0" GroupName="codeMethod" />
                             </StackPanel>
                         </GroupBox>

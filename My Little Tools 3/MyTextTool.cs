@@ -143,17 +143,17 @@ namespace MyLittleTools3
 
                 string CnChar = CnArray[i].ToString();
 
-                byte[] ZW = System.Text.Encoding.Default.GetBytes(CnChar);
+                byte[] CnByte = System.Text.Encoding.Default.GetBytes(CnChar);
 
                 //如果是字母，则直接返回 
-                if (ZW.Length == 1)
+                if (CnByte.Length == 1)
                 {
                     PyChar += CnChar.ToUpper();
                 }
                 else
                 {
-                    int i1 = (short)(ZW[0]);
-                    int i2 = (short)(ZW[1]);
+                    int i1 = (short)(CnByte[0]);
+                    int i2 = (short)(CnByte[1]);
                     long iCnChar = i1 * 256 + i2;
 
                     // 分段匹配
@@ -217,7 +217,7 @@ namespace MyLittleTools3
                     {
                         PyChar += "P";
                     }
-                    else if ((iCnChar >= 50906) && (iCnChar <= .51386))
+                    else if ((iCnChar >= 50906) && (iCnChar <= 51386))
                     {
                         PyChar += "Q";
                     }
@@ -257,9 +257,6 @@ namespace MyLittleTools3
             }
             return PyChar;
         }
-
-
-
 
     }
 }
