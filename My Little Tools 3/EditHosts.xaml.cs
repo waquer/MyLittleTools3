@@ -19,7 +19,7 @@ namespace MyLittleTools3
             InitializeComponent();
         }
 
-        private void checklastline()
+        private void Checklastline()
         {
             if (HEditor.GetLineText(HEditor.LineCount - 1) != "")
             {
@@ -27,7 +27,7 @@ namespace MyLittleTools3
             }
         }
 
-        private void checknewline()
+        private void Checknewline()
         {
             if (HEditor.Text.Substring(HEditor.SelectionStart - 2, 2) != Environment.NewLine)
             {
@@ -39,7 +39,7 @@ namespace MyLittleTools3
         {
             String text = File.ReadAllText(Hfile);
             HEditor.Text = text;
-            checklastline();
+            Checklastline();
             HEditor.ScrollToEnd();
             HEditor.Select(HEditor.Text.Length, 0);
         }
@@ -85,28 +85,28 @@ namespace MyLittleTools3
             SaveHost();
         }
 
-        private void btnHostsSave_Click(object sender, RoutedEventArgs e)
+        private void BtnHostsSave_Click(object sender, RoutedEventArgs e)
         {
             SaveHost();
         }
 
-        private void btnHostsReload_Click(object sender, RoutedEventArgs e)
+        private void BtnHostsReload_Click(object sender, RoutedEventArgs e)
         {
             LoadHost();
         }
 
-        private void btnHostsBackup_Click(object sender, RoutedEventArgs e)
+        private void BtnHostsBackup_Click(object sender, RoutedEventArgs e)
         {
             LoadHost();
         }
 
-        private void btnHostsPreset1_Click(object sender, RoutedEventArgs e)
+        private void BtnHostsPreset1_Click(object sender, RoutedEventArgs e)
         {
             LoadPreset("hosts.p1");
 
         }
 
-        private void btnHostsPreset2_Click(object sender, RoutedEventArgs e)
+        private void BtnHostsPreset2_Click(object sender, RoutedEventArgs e)
         {
             LoadPreset("hosts.p2");
         }

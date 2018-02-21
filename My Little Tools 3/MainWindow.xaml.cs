@@ -17,7 +17,7 @@ namespace MyLittleTools3
         MyJumpList myJumpList = new MyJumpList();
         MyFileTool myFileTool = new MyFileTool();
 
-        public MainWindow(int tabidx=0)
+        public MainWindow(int tabidx = 0)
         {
             InitializeComponent();
             btnUpdateSelf.Content = App.ResourceAssembly.GetName(false).Version;
@@ -29,25 +29,27 @@ namespace MyLittleTools3
         #region 跳转列表
 
         /* 设置JumpList */
-        private void btnSetJumpList_Click(object sender, RoutedEventArgs e)
+        private void BtnSetJumpList_Click(object sender, RoutedEventArgs e)
         {
-            myJumpList.setJumpList();
+            myJumpList.SetJumpList();
         }
 
         /* 清空JumpList */
-        private void btnClearJumpList_Click(object sender, RoutedEventArgs e)
+        private void BtnClearJumpList_Click(object sender, RoutedEventArgs e)
         {
-            myJumpList.clearAll();
+            myJumpList.ClearAll();
         }
 
         /* 选择要向JL列表中添加的文件 */
-        private void btnSelectJumpFile_Click(object sender, RoutedEventArgs e)
+        private void BtnSelectJumpFile_Click(object sender, RoutedEventArgs e)
         {
-            OpenFileDialog OpenFileD = new OpenFileDialog();
-            OpenFileD.FileName = "程序";
-            OpenFileD.Filter = "可执行文件|*.exe";
-            OpenFileD.DefaultExt = ".exe";
-            OpenFileD.AddExtension = true;
+            OpenFileDialog OpenFileD = new OpenFileDialog
+            {
+                FileName = "程序",
+                Filter = "可执行文件|*.exe",
+                DefaultExt = ".exe",
+                AddExtension = true
+            };
             if (OpenFileD.ShowDialog() == true)
             {
                 String filename = OpenFileD.FileNames[0];
@@ -57,42 +59,42 @@ namespace MyLittleTools3
         }
 
         /* 向JL列表中添加文件 */
-        private void btnAddJumpFile_Click(object sender, RoutedEventArgs e)
+        private void BtnAddJumpFile_Click(object sender, RoutedEventArgs e)
         {
             if (tbJFilePath.Text != "" && tbJFileName.Text != "")
             {
-                myJumpList.add(tbJFilePath.Text, tbJFileName.Text);
+                myJumpList.Add(tbJFilePath.Text, tbJFileName.Text);
             }
         }
 
         /* 从JL列表中删除一个文件 */
-        private void btnDelJumpFile_Click(object sender, RoutedEventArgs e)
+        private void BtnDelJumpFile_Click(object sender, RoutedEventArgs e)
         {
             int sidx = lsvJumpList.SelectedIndex;
             if (sidx > -1)
             {
-                myJumpList.removeAt(sidx);
+                myJumpList.RemoveAt(sidx);
             }
         }
 
         /* JumpList文件上移 */
-        private void btnUpJumpFile_Click(object sender, RoutedEventArgs e)
+        private void BtnUpJumpFile_Click(object sender, RoutedEventArgs e)
         {
             int sidx = lsvJumpList.SelectedIndex;
             if (sidx > -1)
             {
-                myJumpList.moveUp(sidx);
+                myJumpList.MoveUp(sidx);
                 lsvJumpList.SelectedIndex = sidx - 1;
             }
         }
 
         /* JumpList文件下移 */
-        private void btnDownJumpFile_Click(object sender, RoutedEventArgs e)
+        private void BtnDownJumpFile_Click(object sender, RoutedEventArgs e)
         {
             int sidx = lsvJumpList.SelectedIndex;
             if (sidx > -1)
             {
-                myJumpList.moveDown(sidx);
+                myJumpList.MoveDown(sidx);
                 lsvJumpList.SelectedIndex = sidx + 1;
             }
         }
@@ -162,8 +164,10 @@ namespace MyLittleTools3
 
         private void CodeFile_add(object sender, RoutedEventArgs e)
         {
-            OpenFileDialog OpenFileD = new OpenFileDialog();
-            OpenFileD.Multiselect = false;
+            OpenFileDialog OpenFileD = new OpenFileDialog
+            {
+                Multiselect = false
+            };
             if (OpenFileD.ShowDialog() == true)
             {
                 tbCodeInput.Text = OpenFileD.FileName;
@@ -172,39 +176,39 @@ namespace MyLittleTools3
 
         private void DoCoding(String codeType)
         {
-            MyCodeTool codeTool = new MyCodeTool();
-
-            codeTool.inputString = tbCodeInput.Text;
-
-            codeTool.codeType = codeType;
+            MyCodeTool codeTool = new MyCodeTool
+            {
+                InputString = tbCodeInput.Text,
+                CodeType = codeType
+            };
 
             if (rbCodeASCII.IsChecked == true)
             {
-                codeTool.codeCharset = "ASCII";
+                codeTool.CodeCharset = "ASCII";
             }
             else
             {
-                codeTool.codeCharset = "UTF-8";
+                codeTool.CodeCharset = "UTF-8";
             }
 
             if (rbCodeMD5.IsChecked == true)
             {
-                codeTool.codeMethod = "MD5";
+                codeTool.CodeMethod = "MD5";
             }
             else if (rbCodeSHA1.IsChecked == true)
             {
-                codeTool.codeMethod = "SHA1";
+                codeTool.CodeMethod = "SHA1";
             }
             else if (rbCodeBASE64.IsChecked == true)
             {
-                codeTool.codeMethod = "BASE64";
+                codeTool.CodeMethod = "BASE64";
             }
             else
             {
-                codeTool.codeMethod = "URL";
+                codeTool.CodeMethod = "URL";
             }
 
-            tbCodeOutput.Text = codeTool.doCoding();
+            tbCodeOutput.Text = codeTool.DoCoding();
         }
 
 
@@ -225,8 +229,10 @@ namespace MyLittleTools3
         // 添加文件
         private void ListFiles_add(object sender, RoutedEventArgs e)
         {
-            OpenFileDialog OpenFileD = new OpenFileDialog();
-            OpenFileD.Multiselect = true;
+            OpenFileDialog OpenFileD = new OpenFileDialog
+            {
+                Multiselect = true
+            };
             if (OpenFileD.ShowDialog() == true)
             {
                 String[] files = OpenFileD.FileNames;
@@ -273,20 +279,20 @@ namespace MyLittleTools3
             }
         }
 
-        private void renameByT_KeyUp(object sender, System.Windows.Input.KeyEventArgs e)
+        private void RenameByT_KeyUp(object sender, System.Windows.Input.KeyEventArgs e)
         {
             renameByT.IsChecked = true;
         }
 
-        private void renameByR_KeyUp(object sender, System.Windows.Input.KeyEventArgs e)
+        private void RenameByR_KeyUp(object sender, System.Windows.Input.KeyEventArgs e)
         {
             renameByR.IsChecked = true;
         }
 
         // 重命名
-        private void btnRename_Click(object sender, RoutedEventArgs e)
+        private void BtnRename_Click(object sender, RoutedEventArgs e)
         {
-            
+
             if (renameByR.IsChecked == true)
             {
                 myFileTool.brRepSor = renameReSor.Text;
@@ -303,10 +309,10 @@ namespace MyLittleTools3
                 return;
             }
 
-            MessageBoxResult mbr = MessageBox.Show(myFileTool.batchRename(), "确定执行重命名吗？", MessageBoxButton.YesNo);
+            MessageBoxResult mbr = MessageBox.Show(myFileTool.BatchRename(), "确定执行重命名吗？", MessageBoxButton.YesNo);
             if (mbr == MessageBoxResult.Yes)
             {
-                myFileTool.doRename();
+                myFileTool.DoRename();
             }
         }
 
@@ -327,14 +333,14 @@ namespace MyLittleTools3
         }
 
         /* 设置窗体总在最上状态 */
-        private void cbOnTop_Click(object sender, RoutedEventArgs e)
+        private void CbOnTop_Click(object sender, RoutedEventArgs e)
         {
             this.Topmost = (cbOnTop.IsChecked == true) ? true : false;
         }
 
         #endregion
 
-        
+
 
     }
 }

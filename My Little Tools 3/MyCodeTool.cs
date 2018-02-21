@@ -14,9 +14,9 @@ namespace MyLittleTools3
         private Encoding MyEncoding;
         private Boolean IfDecode;
 
-        public String inputString;
-        public String codeMethod;
-        public String codeCharset
+        public String InputString;
+        public String CodeMethod;
+        public String CodeCharset
         {
             set
             {
@@ -26,7 +26,7 @@ namespace MyLittleTools3
                     MyEncoding = UTF8Encoding.Default;
             }
         }
-        public String codeType
+        public String CodeType
         {
             set {
                 IfDecode = value.ToLower() == "decode";
@@ -35,22 +35,22 @@ namespace MyLittleTools3
 
         public MyCodeTool()
         {
-            inputString = "";
-            codeMethod = "";
+            InputString = "";
+            CodeMethod = "";
             IfDecode = false;
             MyEncoding = UTF8Encoding.Default;
         }
 
-        public String doCoding()
+        public String DoCoding()
         {
-            switch (codeMethod)
+            switch (CodeMethod)
             {
                 case "BASE64":
                     return IfDecode ? DoBase64Decode() : DoBase64Encode();
                 case "URL":
                     return IfDecode ? DoUrlDecode() : DoUrlEncode();
                 default:
-                    return IfDecode ? "暂不支持" : DoHash(codeMethod);
+                    return IfDecode ? "暂不支持" : DoHash(CodeMethod);
             }
         }
 
@@ -74,15 +74,15 @@ namespace MyLittleTools3
             byte[] hashBytes;
             String result = "";
 
-            if (File.Exists(inputString))
+            if (File.Exists(InputString))
             {
-                FileStream fs = new FileStream(inputString, FileMode.Open, FileAccess.Read);
+                FileStream fs = new FileStream(InputString, FileMode.Open, FileAccess.Read);
                 hashBytes = algorithm.ComputeHash(fs);
                 fs.Close();
             }
             else
             {
-                hashBytes = algorithm.ComputeHash(MyEncoding.GetBytes(inputString));
+                hashBytes = algorithm.ComputeHash(MyEncoding.GetBytes(InputString));
             }
             for (int i = 0; i < hashBytes.Length; i++)
                 result += hashBytes[i].ToString("x").PadLeft(2, '0');
@@ -93,24 +93,24 @@ namespace MyLittleTools3
         /* URL编码 */
         private String DoUrlEncode()
         {
-            return HttpUtility.UrlEncode(inputString);
+            return HttpUtility.UrlEncode(InputString);
         }
 
         /* URL解码 */
         private String DoUrlDecode()
         {
-            return HttpUtility.UrlDecode(inputString);
+            return HttpUtility.UrlDecode(InputString);
         }
 
         /* BASE64编码 */
         private String DoBase64Encode()
         {
-            if (File.Exists(inputString))
+            if (File.Exists(InputString))
             {
                 String result = "";
-                Image img = Image.FromFile(inputString);
+                Image img = Image.FromFile(InputString);
                 MemoryStream mstream = new MemoryStream();
-                switch (Path.GetExtension(inputString).ToLower())
+                switch (Path.GetExtension(InputString).ToLower())
                 {
                     case ".bmp":
                         img.Save(mstream, ImageFormat.Bmp);
@@ -144,7 +144,7 @@ namespace MyLittleTools3
             else
             {
 
-                byte[] bytedata = MyEncoding.GetBytes(inputString);
+                byte[] bytedata = MyEncoding.GetBytes(InputString);
                 return Convert.ToBase64String(bytedata, 0, bytedata.Length);
             }
         }
@@ -154,7 +154,7 @@ namespace MyLittleTools3
         {
             try
             {
-                Byte[] bytes = Convert.FromBase64String(inputString);
+                Byte[] bytes = Convert.FromBase64String(InputString);
                 return MyEncoding.GetString(bytes);
             }
             catch

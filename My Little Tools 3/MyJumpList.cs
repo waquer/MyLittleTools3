@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
-using System.ComponentModel;
 using System.IO;
 using System.Windows.Shell;
 
@@ -18,7 +17,7 @@ namespace MyLittleTools3
             this.LoadINI();
         }
 
-        public void add(String path, String name="", String desc="")
+        public void Add(String path, String name="", String desc="")
         {
             if (name=="")
             {
@@ -30,22 +29,24 @@ namespace MyLittleTools3
                 desc = name;
             }
 
-            JumpTask jumpTask = new JumpTask();
-            jumpTask.ApplicationPath = path;
-            jumpTask.IconResourcePath = path;
-            jumpTask.Title = name;
-            jumpTask.Description = desc;
+            JumpTask jumpTask = new JumpTask
+            {
+                ApplicationPath = path,
+                IconResourcePath = path,
+                Title = name,
+                Description = desc
+            };
 
             this.JTData.Add(jumpTask);
         }
 
-        public void clearAll()
+        public void ClearAll()
         {
             this.JTData.Clear();
             //this.setJumpList();
         }
 
-        public void removeAt(int idx)
+        public void RemoveAt(int idx)
         {
             if (idx > -1 && idx < JTData.Count)
             {
@@ -53,7 +54,7 @@ namespace MyLittleTools3
             }
         }
 
-        public void moveUp(int idx)
+        public void MoveUp(int idx)
         {
             if (idx > 0)
             {
@@ -63,7 +64,7 @@ namespace MyLittleTools3
             }
         }
 
-        public void moveDown(int idx)
+        public void MoveDown(int idx)
         {
             if (idx < JTData.Count - 1)
             {
@@ -73,7 +74,7 @@ namespace MyLittleTools3
             }
         }
 
-        public void setJumpList()
+        public void SetJumpList()
         {
             if (jumpList != null)
             {
@@ -92,12 +93,12 @@ namespace MyLittleTools3
                 }
                 this.jumpList.JumpItems.Add(new JumpTask());
             }
-            this.appendDefault();
+            this.AppendDefault();
             this.jumpList.Apply();
             this.SaveINI();
         }
 
-        private void appendDefault()
+        private void AppendDefault()
         {
             String appPath = System.Reflection.Assembly.GetEntryAssembly().Location;
 
@@ -108,12 +109,14 @@ namespace MyLittleTools3
 
             for (int i = 0; i < argarry.GetLength(0); i++)
             {
-                JumpTask jumpTask = new JumpTask();
-                jumpTask.ApplicationPath = appPath;
-                jumpTask.IconResourcePath = appPath;
-                jumpTask.Title = argarry[i, 0];
-                jumpTask.Description = argarry[i, 0];
-                jumpTask.Arguments = argarry[i, 1];
+                JumpTask jumpTask = new JumpTask
+                {
+                    ApplicationPath = appPath,
+                    IconResourcePath = appPath,
+                    Title = argarry[i, 0],
+                    Description = argarry[i, 0],
+                    Arguments = argarry[i, 1]
+                };
                 this.jumpList.JumpItems.Add(jumpTask);
             }
         }
@@ -126,11 +129,13 @@ namespace MyLittleTools3
             ini.ReadSection("JumpList", KeyList);
             foreach (string key in KeyList)
             {
-                JumpTask jumpTask = new JumpTask();
-                jumpTask.ApplicationPath = ini.ReadString("JumpList", key, "");
-                jumpTask.IconResourcePath = ini.ReadString("JumpList", key, "");
-                jumpTask.Title = key;
-                jumpTask.Description = key;
+                JumpTask jumpTask = new JumpTask
+                {
+                    ApplicationPath = ini.ReadString("JumpList", key, ""),
+                    IconResourcePath = ini.ReadString("JumpList", key, ""),
+                    Title = key,
+                    Description = key
+                };
                 this.JTData.Add(jumpTask);
             }
         }

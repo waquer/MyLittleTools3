@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
-using System.Windows.Controls;
 
 namespace MyLittleTools3
 {
@@ -34,7 +33,7 @@ namespace MyLittleTools3
                 return (this.fileAttr & FileAttributes.ReadOnly) == FileAttributes.ReadOnly;
             }
             set {
-                this.changeAttr(FileAttributes.ReadOnly, value);
+                this.ChangeAttr(FileAttributes.ReadOnly, value);
             }
         }
 
@@ -45,7 +44,7 @@ namespace MyLittleTools3
             }
             set
             {
-                this.changeAttr(FileAttributes.Hidden, value);
+                this.ChangeAttr(FileAttributes.Hidden, value);
             }
         }
 
@@ -55,7 +54,7 @@ namespace MyLittleTools3
                 return (this.fileAttr & FileAttributes.Archive) == FileAttributes.Archive;
             }
             set {
-                this.changeAttr(FileAttributes.Archive, value);
+                this.ChangeAttr(FileAttributes.Archive, value);
             }
         }
 
@@ -65,7 +64,7 @@ namespace MyLittleTools3
                 return (this.fileAttr & FileAttributes.System) == FileAttributes.System;
             }
             set {
-                this.changeAttr(FileAttributes.System, value);
+                this.ChangeAttr(FileAttributes.System, value);
             }
         }
 
@@ -75,7 +74,7 @@ namespace MyLittleTools3
                 return (this.fileAttr & FileAttributes.Normal) == FileAttributes.Normal;
             }
             set {
-                this.changeAttr(FileAttributes.Normal, value);
+                this.ChangeAttr(FileAttributes.Normal, value);
             }
         }
 
@@ -85,7 +84,7 @@ namespace MyLittleTools3
                 return (this.fileAttr & FileAttributes.NotContentIndexed) == FileAttributes.NotContentIndexed;
             }
             set {
-                this.changeAttr(FileAttributes.NotContentIndexed, value);
+                this.ChangeAttr(FileAttributes.NotContentIndexed, value);
             }
         }
 
@@ -104,7 +103,7 @@ namespace MyLittleTools3
             }
         }
 
-        public void changeAttr(FileAttributes attr, Boolean value)
+        public void ChangeAttr(FileAttributes attr, Boolean value)
         {
             if (this.filePath != "")
             {
@@ -143,14 +142,14 @@ namespace MyLittleTools3
         public String brRepTar = "";
 
         private ArrayList renameList;
-        private class renameRule
+        private class RenameRule
         {
             public String path;
             public String oldname;
             public String newname;
         }
 
-        public String batchRename()
+        public String BatchRename()
         {
             if (this.brRepSor == "")
             {
@@ -162,10 +161,11 @@ namespace MyLittleTools3
             int length = this.fileList.Count;
             for (int i = 0; i < length; i++)
             {
-                renameRule rule = new renameRule();
-
-                rule.path = Path.GetDirectoryName(fileList[i]);
-                rule.oldname = Path.GetFileName(fileList[i]);
+                RenameRule rule = new RenameRule
+                {
+                    path = Path.GetDirectoryName(fileList[i]),
+                    oldname = Path.GetFileName(fileList[i])
+                };
                 if (brRepTar == null)　// 模板方式
                 {
                     rule.newname = brRepSor.Replace("*", (i+1).ToString().PadLeft(length.ToString().Length, '0'));
@@ -177,16 +177,16 @@ namespace MyLittleTools3
                 rule.newname = rule.newname + Path.GetExtension(fileList[i]);
                 renameList.Add(rule);
             }
-            return renameView();
+            return RenameView();
         }
 
-        private String renameView()
+        private String RenameView()
         {
             String text = "程序错误";
             if (this.renameList.Count > 0)
             {
                 text = "";
-                foreach (renameRule rule in renameList)
+                foreach (RenameRule rule in renameList)
                 {
                     text += rule.oldname + "\t" + "→" + "\t" + rule.newname + Environment.NewLine;
                 }
@@ -194,14 +194,14 @@ namespace MyLittleTools3
             return text;
         }
 
-        public void doRename()
+        public void DoRename()
         {
             int length = this.renameList.Count;
             if (length > 0)
             {
                 for (int i = 0; i < length; i++)
                 {
-                    renameRule rule = (renameRule)this.renameList[i];
+                    RenameRule rule = (RenameRule)this.renameList[i];
                     try
                     {
                         File.Move(Path.Combine(rule.path, rule.oldname), Path.Combine(rule.path, rule.newname));

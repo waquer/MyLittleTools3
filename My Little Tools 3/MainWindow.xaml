@@ -123,14 +123,14 @@
                                 </Grid.RowDefinitions>
                                 <WrapPanel VerticalAlignment="Center">
                                     <RadioButton VerticalAlignment="Center" GroupName="rename" Name="renameByR">字符替换</RadioButton>
-                                    <TextBox Width="68" Margin="10,0,0,0" Padding="3" Name="renameReSor" KeyUp="renameByR_KeyUp"/>
+                                    <TextBox Width="68" Margin="10,0,0,0" Padding="3" Name="renameReSor" KeyUp="RenameByR_KeyUp"/>
                                     <Label Content="-&gt;" VerticalContentAlignment="Center" Padding="5,0" />
-                                    <TextBox Width="68" Margin="0,0,0,0" Padding="3" Name="renameReTar" KeyUp="renameByR_KeyUp"/>
-                                    <Button Margin="10,0,0,0" Width="50" Click="btnRename_Click">开始</Button>
+                                    <TextBox Width="68" Margin="0,0,0,0" Padding="3" Name="renameReTar" KeyUp="RenameByR_KeyUp"/>
+                                    <Button Margin="10,0,0,0" Width="50" Click="BtnRename_Click">开始</Button>
                                 </WrapPanel>
                                 <WrapPanel Grid.Row="1" VerticalAlignment="Center">
                                     <RadioButton VerticalAlignment="Center" GroupName="rename" Name="renameByT">使用模板</RadioButton>
-                                    <TextBox Width="160" Margin="10,0,0,0" Height="24" Padding="3"  Name="renameTemplate" KeyUp="renameByT_KeyUp" />
+                                    <TextBox Width="160" Margin="10,0,0,0" Height="24" Padding="3"  Name="renameTemplate" KeyUp="RenameByT_KeyUp" />
                                     <Label Content="（* 序号）" Padding="0" VerticalContentAlignment="Center" Margin="6,0,0,0"/>
                                 </WrapPanel>
                             </Grid>
@@ -159,21 +159,21 @@
                         </ListView.View>
                     </ListView>
                     <StackPanel Grid.Column="1" Grid.RowSpan="3">
-                        <Button x:Name="btnUpJumpFile" Content="上移" Width="40" Height="24" Margin="0,36,0,0" Click="btnUpJumpFile_Click" />
-                        <Button x:Name="btnDownJumpFile" Content="下移" Width="40" Height="24" Margin="0,10,0,0" Click="btnDownJumpFile_Click" />
-                        <Button x:Name="btnDelJumpFile" Content="移除" Width="40" Height="24" Click="btnDelJumpFile_Click" Margin="0,10,0,0" />
-                        <Button x:Name="btnClearJumpList" Content="清空" Width="40" Height="24" Click="btnClearJumpList_Click" Margin="0,10,0,0" />
-                        <Button x:Name="btnSetJumpList" Content="设置" Width="40" Height="24" Click="btnSetJumpList_Click" Margin="0,10,0,0" />
+                        <Button x:Name="btnUpJumpFile" Content="上移" Width="40" Height="24" Margin="0,36,0,0" Click="BtnUpJumpFile_Click" />
+                        <Button x:Name="btnDownJumpFile" Content="下移" Width="40" Height="24" Margin="0,10,0,0" Click="BtnDownJumpFile_Click" />
+                        <Button x:Name="btnDelJumpFile" Content="移除" Width="40" Height="24" Click="BtnDelJumpFile_Click" Margin="0,10,0,0" />
+                        <Button x:Name="btnClearJumpList" Content="清空" Width="40" Height="24" Click="BtnClearJumpList_Click" Margin="0,10,0,0" />
+                        <Button x:Name="btnSetJumpList" Content="设置" Width="40" Height="24" Click="BtnSetJumpList_Click" Margin="0,10,0,0" />
                     </StackPanel>
                     <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,5,0,0">
                         <Label Content="程序路径" Height="24" />
                         <TextBox x:Name="tbJFilePath" Height="24" Width="300" VerticalContentAlignment="Center" />
-                        <Button x:Name="btnSelectJumpFile" Content="选择" Width="40" Height="24" Margin="10,0,0,0" Click="btnSelectJumpFile_Click" />
+                        <Button x:Name="btnSelectJumpFile" Content="选择" Width="40" Height="24" Margin="10,0,0,0" Click="BtnSelectJumpFile_Click" />
                     </StackPanel>
                     <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="0,0,0,5">
                         <Label Content="显示名称" Height="24" />
                         <TextBox x:Name="tbJFileName" Height="24" Width="300" VerticalContentAlignment="Center" />
-                        <Button x:Name="btnAddJumpFile" Content="添加" Width="40" Height="24" Margin="10,0,0,0" Click="btnAddJumpFile_Click" />
+                        <Button x:Name="btnAddJumpFile" Content="添加" Width="40" Height="24" Margin="10,0,0,0" Click="BtnAddJumpFile_Click" />
                     </StackPanel>
                  </Grid>
             </TabItem>
@@ -191,7 +191,7 @@
                     <ColumnDefinition Width="300"/>
                     <ColumnDefinition Width="80"/>
                 </Grid.ColumnDefinitions>
-                <CheckBox x:Name="cbOnTop" Content="总在最上" IsChecked="True" Click="cbOnTop_Click"/>
+                <CheckBox x:Name="cbOnTop" Content="总在最上" IsChecked="True" Click="CbOnTop_Click"/>
                 <Button x:Name="btnUpdateSelf" Grid.Column="2" Click="UpdateSelf" Style="{StaticResource linkstyle}">3.0.0.0</Button>
             </Grid>
         </StatusBar>
