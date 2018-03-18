@@ -197,4 +197,10 @@
             </Grid>
         </StatusBar>
     </Grid>
+    <Window.Resources>
+        <ContextMenu x:Key="NotifyIconMenu" StaysOpen="False">
+            <MenuItem Header="打开" Name="MenuOpen"/>
+            <MenuItem Header="退出" Name="MenuExit"/>
+        </ContextMenu>
+    </Window.Resources>
 </Window>

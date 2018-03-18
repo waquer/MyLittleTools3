@@ -16,6 +16,7 @@ namespace MyLittleTools3
         MyJumpList myJumpList = new MyJumpList();
         MyFileTool myFileTool = new MyFileTool();
         NotifyIcon notifyIcon = new NotifyIcon();
+        NotifyMenu notifyMenu = new NotifyMenu();
 
         public MainWindow(int tabidx = 0)
         {
@@ -23,8 +24,22 @@ namespace MyLittleTools3
             btnUpdateSelf.Content = App.ResourceAssembly.GetName(false).Version;
             lsvJumpList.ItemsSource = myJumpList.JTData;
             ListFiles.ItemsSource = myFileTool.fileList;
-            notifyIcon.Icon = System.Drawing.Icon.ExtractAssociatedIcon(System.Windows.Forms.Application.ExecutablePath);
             tabMain.SelectedIndex = tabidx;
+            notifyIcon.Icon = System.Drawing.Icon.ExtractAssociatedIcon(System.Windows.Forms.Application.ExecutablePath);
+            notifyIcon.ContextMenuStrip = notifyMenu.Instance();
+            notifyIcon.MouseClick += NotifyIcon_Click;
+        }
+
+        private void NotifyIcon_Click(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+            {
+                notifyIcon.ContextMenuStrip.Show();
+            }
+            else
+            {
+                WindowState = WindowState.Normal;
+            }
         }
 
         #region 跳转列表
@@ -314,7 +329,17 @@ namespace MyLittleTools3
         /* 最小化时显示托盘图标 */
         private void WinMain_StateChanged(object sender, EventArgs e)
         {
-            notifyIcon.Visible = WindowState == WindowState.Minimized;
+            if (WindowState == WindowState.Minimized)
+            {
+                notifyIcon.Visible = true;
+                ShowInTaskbar = false;
+            }
+            else
+            {
+                notifyIcon.Visible = false;
+                ShowInTaskbar = true;
+            }
+           
         }
 
 
