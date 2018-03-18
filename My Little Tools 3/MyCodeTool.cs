@@ -20,7 +20,7 @@ namespace MyLittleTools3
         {
             set
             {
-                if (value.ToLower() == "ascii")
+                if (value.ToUpper().Equals("ASCII"))
                     MyEncoding = ASCIIEncoding.Default;
                 else
                     MyEncoding = UTF8Encoding.Default;

@@ -1,7 +1,7 @@
 ﻿<Window x:Name="winMain" x:Class="MyLittleTools3.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="My Little Tool 3" Height="400" Width="500" WindowStartupLocation="CenterScreen" Icon="images/Control Panel.ico" ResizeMode="CanMinimize" Topmost="True">
+        Title="My Little Tool 3" Height="400" Width="500" WindowStartupLocation="CenterScreen" Icon="images/Control Panel.ico" ResizeMode="CanMinimize" Topmost="True" StateChanged="WinMain_StateChanged">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
@@ -51,7 +51,7 @@
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition/>
-                        <ColumnDefinition Width="100"/>
+                        <ColumnDefinition Width="120"/>
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="60"/>
@@ -65,23 +65,23 @@
                     </GroupBox>
                     <Button Grid.Column="1" Width="80" Content="选择文件" Margin="0,22,0,0" VerticalAlignment="Top" Click="CodeFile_add"/>
                     <StackPanel Grid.Row="1" Grid.Column="1" Grid.RowSpan="2">
-                        <GroupBox x:Name="gbCodeCharset" Header="字符集" Margin="5,5,5,0">
-                            <StackPanel Margin="5,5,5,2">
-                                <RadioButton x:Name="rbCodeUTF8" Content="UTF-8" HorizontalAlignment="Left" GroupName="codeCharset" IsChecked="True" />
-                                <RadioButton x:Name="rbCodeASCII" Content="ASCII" HorizontalAlignment="Left" GroupName="codeCharset" Margin="0,5,0,0" />
-                            </StackPanel>
+                        <GroupBox x:Name="gbCodeCharset" Header="字符集" Margin="5">
+                            <ComboBox x:Name="codeCharset" Margin="5, 10">
+                                <ComboBoxItem IsSelected="True">UTF-8</ComboBoxItem>
+                                <ComboBoxItem>ASCII</ComboBoxItem>
+                            </ComboBox>
                         </GroupBox>
-                        <GroupBox x:Name="gbCodeMethod" Header="编码方式" Margin="5,5,5,0">
-                            <StackPanel Margin="5,5,5,2">
-                                <RadioButton x:Name="rbCodeURL" Content="URL" HorizontalAlignment="Left" GroupName="codeMethod" IsChecked="True" />
-                                <RadioButton x:Name="rbCodeMD5" Content="MD5" HorizontalAlignment="Left" Margin="0,5,0,0" GroupName="codeMethod"  />
-                                <RadioButton x:Name="rbCodeSHA1" Content="SHA1" HorizontalAlignment="Left" Margin="0,5,0,0" GroupName="codeMethod" />
-                                <RadioButton x:Name="rbCodeSHA256" Content="SHA256" HorizontalAlignment="Left" Margin="0,5,0,0" GroupName="codeMethod" />
-                                <RadioButton x:Name="rbCodeBASE64" Content="BASE64" HorizontalAlignment="Left" Margin="0,5,0,0" GroupName="codeMethod" />
-                            </StackPanel>
+                        <GroupBox x:Name="gbCodeMethod" Header="编码方式" Margin="5">
+                            <ComboBox x:Name="codeMethod" Margin="5,10">
+                                <ComboBoxItem IsSelected="True">URL</ComboBoxItem>
+                                <ComboBoxItem>MD5</ComboBoxItem>
+                                <ComboBoxItem>SHA1</ComboBoxItem>
+                                <ComboBoxItem>SHA256</ComboBoxItem>
+                                <ComboBoxItem>BASE64</ComboBoxItem>
+                            </ComboBox>
                         </GroupBox>
-                        <Button Content="编码" Width="80" Margin="0,10,0,0" Click="DoEncode" />
-                        <Button Content="解码" Width="80" Margin="0,5,0,0" Click="DoDecode" />
+                        <Button Content="编码" Width="80" Margin="0,20,0,0" Click="DoEncode" />
+                        <Button Content="解码" Width="80" Margin="0,10,0,0" Click="DoDecode" />
                     </StackPanel>
                 </Grid>
             </TabItem>

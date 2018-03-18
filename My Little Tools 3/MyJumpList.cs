@@ -9,7 +9,7 @@ namespace MyLittleTools3
     class MyJumpList
     {
 
-        private ObservableCollection<JumpTask> JTData = new ObservableCollection<JumpTask>();
+        public ObservableCollection<JumpTask> JTData = new ObservableCollection<JumpTask>();
         private JumpList jumpList = JumpList.GetJumpList(App.Current);
 
         public MyJumpList()

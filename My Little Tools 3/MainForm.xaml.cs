@@ -1,10 +1,9 @@
 ﻿using Microsoft.VisualBasic;
-using Microsoft.Win32;
 using System;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
-using System.Web;
+using System.Windows.Forms;
 
 namespace MyLittleTools3
 {
@@ -16,6 +15,7 @@ namespace MyLittleTools3
 
         MyJumpList myJumpList = new MyJumpList();
         MyFileTool myFileTool = new MyFileTool();
+        NotifyIcon notifyIcon = new NotifyIcon();
 
         public MainWindow(int tabidx = 0)
         {
@@ -23,6 +23,7 @@ namespace MyLittleTools3
             btnUpdateSelf.Content = App.ResourceAssembly.GetName(false).Version;
             lsvJumpList.ItemsSource = myJumpList.JTData;
             ListFiles.ItemsSource = myFileTool.fileList;
+            notifyIcon.Icon = System.Drawing.Icon.ExtractAssociatedIcon(System.Windows.Forms.Application.ExecutablePath);
             tabMain.SelectedIndex = tabidx;
         }
 
@@ -50,7 +51,7 @@ namespace MyLittleTools3
                 DefaultExt = ".exe",
                 AddExtension = true
             };
-            if (OpenFileD.ShowDialog() == true)
+            if (OpenFileD.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
                 String filename = OpenFileD.FileNames[0];
                 tbJFilePath.Text = filename;
@@ -164,11 +165,8 @@ namespace MyLittleTools3
 
         private void CodeFile_add(object sender, RoutedEventArgs e)
         {
-            OpenFileDialog OpenFileD = new OpenFileDialog
-            {
-                Multiselect = false
-            };
-            if (OpenFileD.ShowDialog() == true)
+            OpenFileDialog OpenFileD = new OpenFileDialog();
+            if (OpenFileD.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
                 tbCodeInput.Text = OpenFileD.FileName;
             }
@@ -178,44 +176,11 @@ namespace MyLittleTools3
         {
             MyCodeTool codeTool = new MyCodeTool
             {
-                InputString = tbCodeInput.Text,
                 CodeType = codeType
             };
-
-            if (rbCodeASCII.IsChecked == true)
-            {
-                codeTool.CodeCharset = "ASCII";
-            }
-            else
-            {
-                codeTool.CodeCharset = "UTF-8";
-            }
-
-            if(rbCodeURL.IsChecked == true)
-            {
-                codeTool.CodeMethod = "URL";
-            }
-            else if (rbCodeMD5.IsChecked == true)
-            {
-                codeTool.CodeMethod = "MD5";
-            }
-            else if (rbCodeSHA1.IsChecked == true)
-            {
-                codeTool.CodeMethod = "SHA1";
-            }
-            else if (rbCodeSHA256.IsChecked == true)
-            {
-                codeTool.CodeMethod = "SHA256";
-            }
-            else if (rbCodeBASE64.IsChecked == true)
-            {
-                codeTool.CodeMethod = "BASE64";
-            }
-            else
-            {
-                tbCodeOutput.Text = "编码方式无效";
-                return;
-            }
+            codeTool.CodeCharset = codeCharset.Text;
+            codeTool.CodeMethod = codeMethod.Text;
+            codeTool.InputString = tbCodeInput.Text;
             tbCodeOutput.Text = codeTool.DoCoding();
         }
 
@@ -241,7 +206,7 @@ namespace MyLittleTools3
             {
                 Multiselect = true
             };
-            if (OpenFileD.ShowDialog() == true)
+            if (OpenFileD.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
                 String[] files = OpenFileD.FileNames;
                 foreach (String file in files)
@@ -313,11 +278,11 @@ namespace MyLittleTools3
             }
             else
             {
-                MessageBox.Show("请选择一种方式");
+                System.Windows.MessageBox.Show("请选择一种方式");
                 return;
             }
 
-            MessageBoxResult mbr = MessageBox.Show(myFileTool.BatchRename(), "确定执行重命名吗？", MessageBoxButton.YesNo);
+            MessageBoxResult mbr = System.Windows.MessageBox.Show(myFileTool.BatchRename(), "确定执行重命名吗？", MessageBoxButton.YesNo);
             if (mbr == MessageBoxResult.Yes)
             {
                 myFileTool.DoRename();
@@ -331,7 +296,7 @@ namespace MyLittleTools3
         /* 更新程序 */
         private void UpdateSelf(object sender, RoutedEventArgs e)
         {
-            if (MessageBox.Show("此操作将覆盖原程序，确定吗？", "程序更新", MessageBoxButton.OKCancel) == MessageBoxResult.OK)
+            if (System.Windows.MessageBox.Show("此操作将覆盖原程序，确定吗？", "程序更新", MessageBoxButton.OKCancel) == MessageBoxResult.OK)
             {
 
                 String FileNew = System.Reflection.Assembly.GetEntryAssembly().Location;
@@ -346,9 +311,14 @@ namespace MyLittleTools3
             this.Topmost = (cbOnTop.IsChecked == true) ? true : false;
         }
 
+        /* 最小化时显示托盘图标 */
+        private void WinMain_StateChanged(object sender, EventArgs e)
+        {
+            notifyIcon.Visible = WindowState == WindowState.Minimized;
+        }
+
+
         #endregion
-
-
 
     }
 }
