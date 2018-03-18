@@ -303,13 +303,13 @@ namespace MyLittleTools3
 
             if (renameByR.IsChecked == true)
             {
-                myFileTool.brRepSor = renameReSor.Text;
-                myFileTool.brRepTar = renameReTar.Text;
+                myFileTool.fileSource = renameReSor.Text;
+                myFileTool.fileTarget = renameReTar.Text;
             }
             else if (renameByT.IsChecked == true)
             {
-                myFileTool.brRepSor = renameTemplate.Text;
-                myFileTool.brRepTar = null;
+                myFileTool.fileSource = renameTemplate.Text;
+                myFileTool.fileTarget = null;
             }
             else
             {
