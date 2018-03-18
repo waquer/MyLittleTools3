@@ -176,7 +176,7 @@
                         <TextBox x:Name="tbJFileName" Height="24" Width="300" VerticalContentAlignment="Center" />
                         <Button x:Name="btnAddJumpFile" Content="添加" Width="40" Height="24" Margin="10,0,0,0" Click="BtnAddJumpFile_Click" />
                     </StackPanel>
-                 </Grid>
+                </Grid>
             </TabItem>
             <TabItem Header="其他功能" Height="21" VerticalAlignment="Top">
                 <Grid>
@@ -197,10 +197,4 @@
             </Grid>
         </StatusBar>
     </Grid>
-    <Window.Resources>
-        <ContextMenu x:Key="NotifyIconMenu" StaysOpen="False">
-            <MenuItem Header="打开" Name="MenuOpen"/>
-            <MenuItem Header="退出" Name="MenuExit"/>
-        </ContextMenu>
-    </Window.Resources>
 </Window>

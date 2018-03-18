@@ -1,10 +1,13 @@
 ﻿using System.Windows.Forms;
+using System.ServiceProcess;
 
 namespace MyLittleTools3
 {
     class NotifyMenu
     {
-        private ContextMenuStrip contextMenu;
+        private string scname_apache = "wampapache64";
+        private string scname_mysqld = "wampmysqld64";
+
         private ToolStripSeparator menu_sp = new ToolStripSeparator();
         private ToolStripMenuItem menu_apacheStatus = new ToolStripMenuItem();
         private ToolStripMenuItem menu_apacheStart = new ToolStripMenuItem();
@@ -15,6 +18,8 @@ namespace MyLittleTools3
         private ToolStripMenuItem menu_allStart = new ToolStripMenuItem();
         private ToolStripMenuItem menu_allStop = new ToolStripMenuItem();
         private ToolStripMenuItem menu_exit = new ToolStripMenuItem();
+
+        private ContextMenuStrip contextMenu;
 
         public ContextMenuStrip Instance()
         {
@@ -59,6 +64,31 @@ namespace MyLittleTools3
         {
             System.Windows.Application.Current.Shutdown();
         }
+
+        private string CheckServiceStatus(string serviceName)
+        {
+            ServiceController sc = new ServiceController(serviceName);
+            return sc.Status == ServiceControllerStatus.Running ? "Running" : "Stoped";
+        }
+
+        private void StartService(string serviceName)
+        {
+            ServiceController sc = new ServiceController(serviceName);
+            if (sc.Status == ServiceControllerStatus.Stopped)
+            {
+                sc.Start();
+            }
+        }
+
+        private void StopService(string serviceName)
+        {
+            ServiceController sc = new ServiceController(serviceName);
+            if (sc.Status != ServiceControllerStatus.Stopped)
+            {
+                sc.Stop();
+            }
+        }
+
 
     }
 }
