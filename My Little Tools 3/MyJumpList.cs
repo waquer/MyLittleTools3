@@ -17,20 +17,17 @@ namespace MyLittleTools3
             this.LoadINI();
         }
 
-        public void Add(String path, String name="", String desc="")
+        public void Add(String path, String name = "", String desc = "")
         {
-            if (name=="")
-            {
+            if (name == "") {
                 name = Path.GetFileNameWithoutExtension(path);
             }
 
-            if (desc == "")
-            {
+            if (desc == "") {
                 desc = name;
             }
 
-            JumpTask jumpTask = new JumpTask
-            {
+            JumpTask jumpTask = new JumpTask {
                 ApplicationPath = path,
                 IconResourcePath = path,
                 Title = name,
@@ -48,26 +45,23 @@ namespace MyLittleTools3
 
         public void RemoveAt(int idx)
         {
-            if (idx > -1 && idx < JTData.Count)
-            {
+            if (idx > -1 && idx < JTData.Count) {
                 this.JTData.RemoveAt(idx);
             }
         }
 
         public void MoveUp(int idx)
         {
-            if (idx > 0)
-            {
+            if (idx > 0) {
                 JumpTask jt = JTData[idx];
                 JTData.RemoveAt(idx);
-                JTData.Insert(idx-1, jt);
+                JTData.Insert(idx - 1, jt);
             }
         }
 
         public void MoveDown(int idx)
         {
-            if (idx < JTData.Count - 1)
-            {
+            if (idx < JTData.Count - 1) {
                 JumpTask jt = JTData[idx];
                 JTData.RemoveAt(idx);
                 JTData.Insert(idx + 1, jt);
@@ -76,19 +70,14 @@ namespace MyLittleTools3
 
         public void SetJumpList()
         {
-            if (jumpList != null)
-            {
+            if (jumpList != null) {
                 this.jumpList.JumpItems.Clear();
-            }
-            else
-            {
+            } else {
                 this.jumpList = new JumpList();
             }
 
-            if (JTData.Count > 0)
-            {
-                foreach (JumpTask jt in JTData)
-                {
+            if (JTData.Count > 0) {
+                foreach (JumpTask jt in JTData) {
                     this.jumpList.JumpItems.Add(jt);
                 }
                 this.jumpList.JumpItems.Add(new JumpTask());
@@ -107,10 +96,8 @@ namespace MyLittleTools3
                 {"修改Hosts","-edithosts"}
             };
 
-            for (int i = 0; i < argArray.GetLength(0); i++)
-            {
-                JumpTask jumpTask = new JumpTask
-                {
+            for (int i = 0; i < argArray.GetLength(0); i++) {
+                JumpTask jumpTask = new JumpTask {
                     ApplicationPath = appPath,
                     IconResourcePath = appPath,
                     Title = argArray[i, 0],
@@ -120,17 +107,15 @@ namespace MyLittleTools3
                 this.jumpList.JumpItems.Add(jumpTask);
             }
         }
-        
+
         private void LoadINI()
         {
             MyIniTool ini = new MyIniTool();
 
             StringCollection KeyList = new StringCollection();
             ini.ReadSection("JumpList", KeyList);
-            foreach (string key in KeyList)
-            {
-                JumpTask jumpTask = new JumpTask
-                {
+            foreach (string key in KeyList) {
+                JumpTask jumpTask = new JumpTask {
                     ApplicationPath = ini.ReadString("JumpList", key, ""),
                     IconResourcePath = ini.ReadString("JumpList", key, ""),
                     Title = key,
@@ -144,8 +129,7 @@ namespace MyLittleTools3
         {
             MyIniTool ini = new MyIniTool();
             ini.EraseSection("JumpList");
-            foreach (JumpTask jumpTask in this.JTData)
-            {
+            foreach (JumpTask jumpTask in this.JTData) {
                 ini.WriteString("JumpList", jumpTask.Title, jumpTask.ApplicationPath);
             }
         }

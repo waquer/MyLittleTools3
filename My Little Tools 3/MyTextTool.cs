@@ -92,30 +92,22 @@ namespace MyLittleTools3
             int i2 = 0;
             char[] noWChar = hzString.ToCharArray();
 
-            for (int j = 0; j < noWChar.Length; j++)
-            {
+            for (int j = 0; j < noWChar.Length; j++) {
                 // 中文字符
-                if (regex.IsMatch(noWChar[j].ToString()))
-                {
+                if (regex.IsMatch(noWChar[j].ToString())) {
                     array = System.Text.Encoding.Default.GetBytes(noWChar[j].ToString());
                     i1 = (short)(array[0]);
                     i2 = (short)(array[1]);
                     chrAsc = i1 * 256 + i2 - 65536;
-                    if (chrAsc > 0 && chrAsc < 160)
-                    {
+                    if (chrAsc > 0 && chrAsc < 160) {
                         pyString += noWChar[j];
-                    }
-                    else
-                    {
+                    } else {
                         // 修正部分文字
                         if (chrAsc == -9254)  // 修正“圳”字
                             pyString += "Zhen";
-                        else
-                        {
-                            for (int i = (pyValue.Length - 1); i >= 0; i--)
-                            {
-                                if (pyValue[i] <= chrAsc)
-                                {
+                        else {
+                            for (int i = (pyValue.Length - 1); i >= 0; i--) {
+                                if (pyValue[i] <= chrAsc) {
                                     pyString += pyName[i];
                                     break;
                                 }
@@ -124,8 +116,7 @@ namespace MyLittleTools3
                     }
                 }
                 // 非中文字符
-                else
-                {
+                else {
                     pyString += noWChar[j].ToString();
                 }
             }
@@ -138,119 +129,68 @@ namespace MyLittleTools3
 
             string PyChar = "";
             char[] CnArray = CnString.ToCharArray();
-            for (int i = 0; i < CnArray.Length; i++)
-            {
+            for (int i = 0; i < CnArray.Length; i++) {
 
                 string CnChar = CnArray[i].ToString();
 
                 byte[] CnByte = System.Text.Encoding.Default.GetBytes(CnChar);
 
                 //如果是字母，则直接返回 
-                if (CnByte.Length == 1)
-                {
+                if (CnByte.Length == 1) {
                     PyChar += CnChar.ToUpper();
-                }
-                else
-                {
+                } else {
                     int i1 = (short)(CnByte[0]);
                     int i2 = (short)(CnByte[1]);
                     long iCnChar = i1 * 256 + i2;
 
                     // 分段匹配
-                    if ((iCnChar >= 45217) && (iCnChar <= 45252))
-                    {
+                    if ((iCnChar >= 45217) && (iCnChar <= 45252)) {
                         PyChar += "A";
-                    }
-                    else if ((iCnChar >= 45253) && (iCnChar <= 45760))
-                    {
+                    } else if ((iCnChar >= 45253) && (iCnChar <= 45760)) {
                         PyChar += "B";
-                    }
-                    else if ((iCnChar >= 45761) && (iCnChar <= 46317))
-                    {
+                    } else if ((iCnChar >= 45761) && (iCnChar <= 46317)) {
                         PyChar += "C";
-                    }
-                    else if ((iCnChar >= 46318) && (iCnChar <= 46825))
-                    {
+                    } else if ((iCnChar >= 46318) && (iCnChar <= 46825)) {
                         PyChar += "D";
-                    }
-                    else if ((iCnChar >= 46826) && (iCnChar <= 47009))
-                    {
+                    } else if ((iCnChar >= 46826) && (iCnChar <= 47009)) {
                         PyChar += "E";
-                    }
-                    else if ((iCnChar >= 47010) && (iCnChar <= 47296))
-                    {
+                    } else if ((iCnChar >= 47010) && (iCnChar <= 47296)) {
                         PyChar += "F";
-                    }
-                    else if ((iCnChar >= 47297) && (iCnChar <= 47613))
-                    {
+                    } else if ((iCnChar >= 47297) && (iCnChar <= 47613)) {
                         PyChar += "G";
-                    }
-                    else if ((iCnChar >= 47614) && (iCnChar <= 48118))
-                    {
+                    } else if ((iCnChar >= 47614) && (iCnChar <= 48118)) {
                         PyChar += "H";
-                    }
-                    else if ((iCnChar >= 48119) && (iCnChar <= 49061))
-                    {
+                    } else if ((iCnChar >= 48119) && (iCnChar <= 49061)) {
                         PyChar += "J";
-                    }
-                    else if ((iCnChar >= 49062) && (iCnChar <= 49323))
-                    {
+                    } else if ((iCnChar >= 49062) && (iCnChar <= 49323)) {
                         PyChar += "K";
-                    }
-                    else if ((iCnChar >= 49324) && (iCnChar <= 49895))
-                    {
+                    } else if ((iCnChar >= 49324) && (iCnChar <= 49895)) {
                         PyChar += "L";
-                    }
-                    else if ((iCnChar >= 49896) && (iCnChar <= 50370))
-                    {
+                    } else if ((iCnChar >= 49896) && (iCnChar <= 50370)) {
                         PyChar += "M";
-                    }
-                    else if ((iCnChar >= 50371) && (iCnChar <= 50613))
-                    {
+                    } else if ((iCnChar >= 50371) && (iCnChar <= 50613)) {
                         PyChar += "N";
-                    }
-                    else if ((iCnChar >= 50614) && (iCnChar <= 50621))
-                    {
+                    } else if ((iCnChar >= 50614) && (iCnChar <= 50621)) {
                         PyChar += "O";
-                    }
-                    else if ((iCnChar >= 50622) && (iCnChar <= 50905))
-                    {
+                    } else if ((iCnChar >= 50622) && (iCnChar <= 50905)) {
                         PyChar += "P";
-                    }
-                    else if ((iCnChar >= 50906) && (iCnChar <= 51386))
-                    {
+                    } else if ((iCnChar >= 50906) && (iCnChar <= 51386)) {
                         PyChar += "Q";
-                    }
-                    else if ((iCnChar >= 51387) && (iCnChar <= 51445))
-                    {
+                    } else if ((iCnChar >= 51387) && (iCnChar <= 51445)) {
                         PyChar += "R";
-                    }
-                    else if ((iCnChar >= 51446) && (iCnChar <= 52217))
-                    {
+                    } else if ((iCnChar >= 51446) && (iCnChar <= 52217)) {
                         PyChar += "S";
-                    }
-                    else if ((iCnChar >= 52218) && (iCnChar <= 52697))
-                    {
+                    } else if ((iCnChar >= 52218) && (iCnChar <= 52697)) {
                         PyChar += "T";
-                    }
-                    else if ((iCnChar >= 52698) && (iCnChar <= 52979))
-                    {
+                    } else if ((iCnChar >= 52698) && (iCnChar <= 52979)) {
                         PyChar += "W";
-                    }
-                    else if ((iCnChar >= 52980) && (iCnChar <= 53640))
-                    {
+                    } else if ((iCnChar >= 52980) && (iCnChar <= 53640)) {
                         PyChar += "X";
-                    }
-                    else if ((iCnChar >= 53689) && (iCnChar <= 54480))
-                    {
+                    } else if ((iCnChar >= 53689) && (iCnChar <= 54480)) {
                         PyChar += "Y";
-                    }
-                    else if ((iCnChar >= 54481) && (iCnChar <= 55289))
-                    {
+                    } else if ((iCnChar >= 54481) && (iCnChar <= 55289)) {
                         PyChar += "Z";
-                    }
-                    else
-                    {
+                    } else {
                         PyChar += CnChar.ToUpper();
                     }
                 }
