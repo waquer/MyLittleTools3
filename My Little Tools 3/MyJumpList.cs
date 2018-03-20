@@ -123,7 +123,7 @@ namespace MyLittleTools3
         
         private void LoadINI()
         {
-            MyINI ini = new MyINI();
+            MyIniTool ini = new MyIniTool();
 
             StringCollection KeyList = new StringCollection();
             ini.ReadSection("JumpList", KeyList);
@@ -142,7 +142,7 @@ namespace MyLittleTools3
 
         private void SaveINI()
         {
-            MyINI ini = new MyINI();
+            MyIniTool ini = new MyIniTool();
             ini.EraseSection("JumpList");
             foreach (JumpTask jumpTask in this.JTData)
             {

@@ -7,7 +7,7 @@ using System.Text;
 namespace MyLittleTools3
 {
 
-    class MyINI
+    class MyIniTool
     {
         [DllImport("kernel32")]
         private static extern bool WritePrivateProfileString(string section, string key, string val, string filePath);
@@ -16,7 +16,7 @@ namespace MyLittleTools3
 
         public String iniFile;
 
-        public MyINI(String iniPath="")
+        public MyIniTool(String iniPath="")
         {
             if (File.Exists(iniPath))
             {
