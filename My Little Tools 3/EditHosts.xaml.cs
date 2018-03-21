@@ -21,16 +21,14 @@ namespace MyLittleTools3
 
         private void Checklastline()
         {
-            if (HEditor.GetLineText(HEditor.LineCount - 1) != "")
-            {
+            if (HEditor.GetLineText(HEditor.LineCount - 1) != "") {
                 HEditor.AppendText(Environment.NewLine);
             }
         }
 
         private void Checknewline()
         {
-            if (HEditor.Text.Substring(HEditor.SelectionStart - 2, 2) != Environment.NewLine)
-            {
+            if (HEditor.Text.Substring(HEditor.SelectionStart - 2, 2) != Environment.NewLine) {
                 HEditor.SelectedText = Environment.NewLine;
             }
         }
@@ -46,16 +44,12 @@ namespace MyLittleTools3
 
         private void SaveHost()
         {
-            if (MessageBox.Show("是否保存Hosts文件？", "确认保存", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No) == MessageBoxResult.Yes)
-            {
-                try
-                {
+            if (MessageBox.Show("是否保存Hosts文件？", "确认保存", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No) == MessageBoxResult.Yes) {
+                try {
                     StreamWriter sw = new StreamWriter(Hfile, false, Encoding.Default);
                     sw.Write(HEditor.Text);
                     sw.Dispose();
-                }
-                catch (Exception e)
-                {
+                } catch (Exception e) {
                     MessageBox.Show(e.Message);
                 }
             }
@@ -64,13 +58,10 @@ namespace MyLittleTools3
         private void LoadPreset(String filename)
         {
             String pfile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, filename);
-            if (File.Exists(pfile))
-            {
+            if (File.Exists(pfile)) {
                 String text = File.ReadAllText(pfile);
                 HEditor.Text = text;
-            }
-            else
-            {
+            } else {
                 HEditor.Text = "文件载入失败";
             }
         }

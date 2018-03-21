@@ -20,31 +20,25 @@ namespace MyLittleTools3
         public List<String> fileList = new List<String>();
         public String fileSource = "";
         public String fileTarget = "";
-  
+
         public String BatchRename()
         {
-            if (this.fileSource == "")
-            {
+            if (this.fileSource == "") {
                 return "参数有误";
             }
 
             renameList = new List<RenameRule>();
 
             int length = this.fileList.Count;
-            for (int i = 0; i < length; i++)
-            {
-                RenameRule rule = new RenameRule
-                {
+            for (int i = 0; i < length; i++) {
+                RenameRule rule = new RenameRule {
                     path = Path.GetDirectoryName(fileList[i]),
                     oldname = Path.GetFileName(fileList[i])
                 };
-                if (fileTarget == null)
-                {
+                if (fileTarget == null) {
                     // 模板方式
-                    rule.newname = fileSource.Replace("*", (i+1).ToString().PadLeft(length.ToString().Length, '0'));
-                }
-                else　
-                {
+                    rule.newname = fileSource.Replace("*", (i + 1).ToString().PadLeft(length.ToString().Length, '0'));
+                } else {
                     //字符替换
                     rule.newname = Path.GetFileNameWithoutExtension(fileList[i]).Replace(fileSource, fileTarget);
                 }
@@ -57,11 +51,9 @@ namespace MyLittleTools3
         private String RenameView()
         {
             String text = "程序错误";
-            if (this.renameList.Count > 0)
-            {
+            if (this.renameList.Count > 0) {
                 text = "";
-                foreach (RenameRule rule in renameList)
-                {
+                foreach (RenameRule rule in renameList) {
                     text += rule.oldname + "\t" + "→" + "\t" + rule.newname + Environment.NewLine;
                 }
             }
@@ -71,34 +63,22 @@ namespace MyLittleTools3
         public void DoRename()
         {
             int length = this.renameList.Count;
-            if (length > 0)
-            {
-                for (int i = 0; i < length; i++)
-                {
+            if (length > 0) {
+                for (int i = 0; i < length; i++) {
                     RenameRule rule = this.renameList[i];
-                    try
-                    {
+                    try {
                         File.Move(Path.Combine(rule.path, rule.oldname), Path.Combine(rule.path, rule.newname));
-                    }
-                    catch (Exception)
-                    {
+                    } catch (Exception) {
                         String newname = "ErrFile" + i.ToString() + "-" + rule.newname;
                         rule.newname = newname;
-                        try
-                        {
+                        try {
                             File.Move(Path.Combine(rule.path, rule.oldname), Path.Combine(rule.path, rule.newname));
-                        }
-                        catch (Exception)
-                        {
+                        } catch (Exception) {
                             rule.newname = rule.oldname;
-                        }
-                        finally
-                        {
+                        } finally {
                             this.renameList[i] = rule;
                         }
-                    }
-                    finally
-                    {
+                    } finally {
                         this.fileList[i] = Path.Combine(rule.path, rule.newname);
                     }
                 }
@@ -113,87 +93,66 @@ namespace MyLittleTools3
 
         public MyFileAttr(String FilePath)
         {
-            if (File.Exists(FilePath))
-            {
+            if (File.Exists(FilePath)) {
                 this.filePath = FilePath;
                 this.fileAttr = File.GetAttributes(this.filePath);
-            }
-            else
-            {
+            } else {
                 this.filePath = "";
                 this.fileAttr = 0;
             }
             NotifyChanged();
         }
 
-        public Boolean ReadOnly
-        {
-            get
-            {
+        public Boolean ReadOnly {
+            get {
                 return (this.fileAttr & FileAttributes.ReadOnly) == FileAttributes.ReadOnly;
             }
-            set
-            {
+            set {
                 this.ChangeAttr(FileAttributes.ReadOnly, value);
             }
         }
 
-        public Boolean Hidden
-        {
-            get
-            {
+        public Boolean Hidden {
+            get {
                 return (this.fileAttr & FileAttributes.Hidden) == FileAttributes.Hidden;
             }
-            set
-            {
+            set {
                 this.ChangeAttr(FileAttributes.Hidden, value);
             }
         }
 
-        public Boolean Archive
-        {
-            get
-            {
+        public Boolean Archive {
+            get {
                 return (this.fileAttr & FileAttributes.Archive) == FileAttributes.Archive;
             }
-            set
-            {
+            set {
                 this.ChangeAttr(FileAttributes.Archive, value);
             }
         }
 
-        public Boolean System
-        {
-            get
-            {
+        public Boolean System {
+            get {
                 return (this.fileAttr & FileAttributes.System) == FileAttributes.System;
             }
-            set
-            {
+            set {
                 this.ChangeAttr(FileAttributes.System, value);
             }
         }
 
-        public Boolean Normal
-        {
-            get
-            {
+        public Boolean Normal {
+            get {
                 return (this.fileAttr & FileAttributes.Normal) == FileAttributes.Normal;
             }
-            set
-            {
+            set {
                 this.ChangeAttr(FileAttributes.Normal, value);
             }
         }
 
-        public Boolean NotContentIndexed
-        {
-            get
-            {
+        public Boolean NotContentIndexed {
+            get {
                 return (this.fileAttr & FileAttributes.NotContentIndexed) == FileAttributes.NotContentIndexed;
             }
-            set
-            {
+            set {
                 this.ChangeAttr(FileAttributes.NotContentIndexed, value);
             }
         }
@@ -202,8 +161,7 @@ namespace MyLittleTools3
 
         public void NotifyChanged()
         {
-            if (PropertyChanged != null)
-            {
+            if (PropertyChanged != null) {
                 PropertyChanged.Invoke(this, new PropertyChangedEventArgs("ReadOnly"));
                 PropertyChanged.Invoke(this, new PropertyChangedEventArgs("Hidden"));
                 PropertyChanged.Invoke(this, new PropertyChangedEventArgs("Archive"));
@@ -215,24 +173,16 @@ namespace MyLittleTools3
 
         public void ChangeAttr(FileAttributes attr, Boolean value)
         {
-            if (this.filePath != "")
-            {
-                if (attr == FileAttributes.Normal)
-                {
-                    if (value)
-                    {
+            if (this.filePath != "") {
+                if (attr == FileAttributes.Normal) {
+                    if (value) {
                         this.fileAttr = FileAttributes.Normal;
                     }
-                }
-                else
-                {
-                    if (value)
-                    {
+                } else {
+                    if (value) {
                         this.fileAttr = fileAttr | attr;
                         this.fileAttr = fileAttr & ~FileAttributes.Normal;
-                    }
-                    else
-                    {
+                    } else {
                         this.fileAttr = fileAttr & ~attr;
                     }
                 }

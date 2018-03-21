@@ -7,7 +7,7 @@ using System.Text;
 namespace MyLittleTools3
 {
 
-    class MyINI
+    class MyIniTool
     {
         [DllImport("kernel32")]
         private static extern bool WritePrivateProfileString(string section, string key, string val, string filePath);
@@ -16,15 +16,12 @@ namespace MyLittleTools3
 
         public String iniFile;
 
-        public MyINI(String iniPath="")
+        public MyIniTool(String iniPath = "")
         {
-            if (File.Exists(iniPath))
-            {
+            if (File.Exists(iniPath)) {
                 iniFile = iniPath;
-            }
-            else
-            {
-                iniFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "My Little Tools.ini"); 
+            } else {
+                iniFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "My Little Tools.ini");
             }
         }
 
@@ -36,8 +33,7 @@ namespace MyLittleTools3
         /// <param name="Value"></param>
         public void WriteString(string Section, string Ident, string Value)
         {
-            if (!WritePrivateProfileString(Section, Ident, Value, iniFile))
-            {
+            if (!WritePrivateProfileString(Section, Ident, Value, iniFile)) {
                 throw (new ApplicationException("写入INI文件出错"));
             }
         }
@@ -69,13 +65,10 @@ namespace MyLittleTools3
         public int ReadInteger(string Section, string Ident, int Default)
         {
             string intStr = ReadString(Section, Ident, Convert.ToString(Default));
-            try
-            {
+            try {
                 return Convert.ToInt32(intStr);
 
-            }
-            catch (Exception ex)
-            {
+            } catch (Exception ex) {
                 Console.WriteLine(ex.Message);
                 return Default;
             }
@@ -125,8 +118,7 @@ namespace MyLittleTools3
         /// <param name="Section"></param>
         public void EraseSection(string Section)
         {
-            if (!WritePrivateProfileString(Section, null, null, iniFile))
-            {
+            if (!WritePrivateProfileString(Section, null, null, iniFile)) {
                 throw (new ApplicationException("清除INI文件出错"));
             }
         }
@@ -134,13 +126,10 @@ namespace MyLittleTools3
         private void GetStringsFromBuffer(Byte[] Buffer, int bufLen, StringCollection Strings)
         {
             Strings.Clear();
-            if (bufLen != 0)
-            {
+            if (bufLen != 0) {
                 int start = 0;
-                for (int i = 0; i < bufLen; i++)
-                {
-                    if ((Buffer[i] == 0) && ((i - start) > 0))
-                    {
+                for (int i = 0; i < bufLen; i++) {
+                    if ((Buffer[i] == 0) && ((i - start) > 0)) {
                         String s = Encoding.GetEncoding(0).GetString(Buffer, start, i - start);
                         Strings.Add(s);
                         start = i + 1;

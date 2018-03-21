@@ -23,8 +23,7 @@ namespace MyLittleTools3
 
         public ContextMenuStrip Instance()
         {
-            if (contextMenu == null)
-            {
+            if (contextMenu == null) {
                 menu_apacheStatus.Text = "Apache Stoped";
                 menu_apacheStart.Text = "Apache Start";
                 menu_apacheRestart.Text = "Apache Restart";

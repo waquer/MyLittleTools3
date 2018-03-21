@@ -16,18 +16,15 @@ namespace MyLittleTools3
 
         public String InputString;
         public String CodeMethod;
-        public String CodeCharset
-        {
-            set
-            {
+        public String CodeCharset {
+            set {
                 if (value.ToUpper().Equals("ASCII"))
                     MyEncoding = ASCIIEncoding.Default;
                 else
                     MyEncoding = UTF8Encoding.Default;
             }
         }
-        public String CodeType
-        {
+        public String CodeType {
             set {
                 IfDecode = value.ToLower() == "decode";
             }
@@ -43,8 +40,7 @@ namespace MyLittleTools3
 
         public String DoCoding()
         {
-            switch (CodeMethod)
-            {
+            switch (CodeMethod) {
                 case "BASE64":
                     return IfDecode ? DoBase64Decode() : DoBase64Encode();
                 case "URL":
@@ -59,8 +55,7 @@ namespace MyLittleTools3
         {
             HashAlgorithm algorithm;
 
-            switch (method)
-            {
+            switch (method) {
                 case "MD5":
                     algorithm = MD5.Create();
                     break;
@@ -77,14 +72,11 @@ namespace MyLittleTools3
             byte[] hashBytes;
             String result = "";
 
-            if (File.Exists(InputString))
-            {
+            if (File.Exists(InputString)) {
                 FileStream fs = new FileStream(InputString, FileMode.Open, FileAccess.Read);
                 hashBytes = algorithm.ComputeHash(fs);
                 fs.Close();
-            }
-            else
-            {
+            } else {
                 hashBytes = algorithm.ComputeHash(MyEncoding.GetBytes(InputString));
             }
             for (int i = 0; i < hashBytes.Length; i++)
@@ -108,13 +100,11 @@ namespace MyLittleTools3
         /* BASE64编码 */
         private String DoBase64Encode()
         {
-            if (File.Exists(InputString))
-            {
+            if (File.Exists(InputString)) {
                 String result = "";
                 Image img = Image.FromFile(InputString);
                 MemoryStream mstream = new MemoryStream();
-                switch (Path.GetExtension(InputString).ToLower())
-                {
+                switch (Path.GetExtension(InputString).ToLower()) {
                     case ".bmp":
                         img.Save(mstream, ImageFormat.Bmp);
                         result = "data:image/bmp;base64," + Convert.ToBase64String(mstream.GetBuffer());
@@ -143,9 +133,7 @@ namespace MyLittleTools3
                 mstream.Dispose();
                 img.Dispose();
                 return result;
-            }
-            else
-            {
+            } else {
 
                 byte[] bytedata = MyEncoding.GetBytes(InputString);
                 return Convert.ToBase64String(bytedata, 0, bytedata.Length);
@@ -155,16 +143,13 @@ namespace MyLittleTools3
         /* BASE64解码 */
         private String DoBase64Decode()
         {
-            try
-            {
+            try {
                 Byte[] bytes = Convert.FromBase64String(InputString);
                 return MyEncoding.GetString(bytes);
-            }
-            catch
-            {
+            } catch {
                 return "不是有效的BASE64编码";
             }
-            
+
         }
 
     }

@@ -116,7 +116,7 @@
     </Compile>
     <Compile Include="MyCodeTool.cs" />
     <Compile Include="MyFileTool.cs" />
-    <Compile Include="MyINI.cs" />
+    <Compile Include="MyIniTool.cs" />
     <Compile Include="MyJumpList.cs" />
     <Compile Include="MainForm.xaml.cs">
       <DependentUpon>MainForm.xaml</DependentUpon>
