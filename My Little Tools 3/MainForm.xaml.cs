@@ -28,6 +28,7 @@ namespace MyLittleTools3
             notifyIcon.Icon = System.Drawing.Icon.ExtractAssociatedIcon(System.Windows.Forms.Application.ExecutablePath);
             notifyIcon.ContextMenuStrip = notifyMenu.Instance();
             notifyIcon.MouseClick += NotifyIcon_Click;
+            notifyIcon.Visible = true;
         }
 
         private void NotifyIcon_Click(object sender, MouseEventArgs e)
@@ -299,17 +300,14 @@ namespace MyLittleTools3
             this.Topmost = (cbOnTop.IsChecked == true) ? true : false;
         }
 
-        /* 最小化时显示托盘图标 */
+        /* 最小化时显示隐藏任务栏图标 */
         private void WinMain_StateChanged(object sender, EventArgs e)
         {
             if (WindowState == WindowState.Minimized) {
-                notifyIcon.Visible = true;
                 ShowInTaskbar = false;
             } else {
-                notifyIcon.Visible = false;
                 ShowInTaskbar = true;
             }
-
         }
 
 
