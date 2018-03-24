@@ -1,13 +1,16 @@
-﻿using System.Windows.Forms;
+﻿using System.Drawing;
+using System.Windows.Forms;
 using System.ServiceProcess;
 
 namespace MyLittleTools3
 {
     class Service
     {
-        public string serviceTitle;
         public string serviceName;
-        public bool serviceStatus = false;
+        public string serviceTitle;
+        public string serviceStatus;
+
+        public bool IsRunning = false;
         public ToolStripMenuItem menuItem;
 
         public Service(string serviceTitle, string serviceName)
@@ -16,15 +19,12 @@ namespace MyLittleTools3
             this.serviceName = serviceName;
         }
 
-        public string StatusStr()
+        public string ChangeStatus(bool isRunning)
         {
-            return serviceTitle + " is " + (this.serviceStatus ? "Running" : "Stopped");
-        }
-
-        public void ChangeStatus(bool status)
-        {
-            this.serviceStatus = status;
-            this.menuItem.Text = this.StatusStr();
+            this.IsRunning = isRunning;
+            this.serviceStatus = this.serviceTitle + " is " + (isRunning ? "Running" : "Stopped");
+            this.menuItem.Text = this.serviceStatus;
+            return serviceStatus;
         }
 
     }
@@ -32,6 +32,7 @@ namespace MyLittleTools3
 
     class NotifyMenu
     {
+
         private Service sc_apache = new Service("Apache", "wampapache64");
         private Service sc_mysqld = new Service("MySQL", "wampmysqld64");
 
@@ -48,14 +49,24 @@ namespace MyLittleTools3
 
         private ContextMenuStrip contextMenu;
 
-        public ContextMenuStrip Instance()
+        private NotifyIcon notifyIcon;
+
+        public void SetNotifyIcon(NotifyIcon notifyIcon)
+        {
+            this.notifyIcon = notifyIcon;
+            notifyIcon.Icon = Icon.ExtractAssociatedIcon(Application.ExecutablePath);
+            notifyIcon.ContextMenuStrip = GetNotifyMenu();
+            notifyIcon.Visible = true;
+        }
+
+        public ContextMenuStrip GetNotifyMenu()
         {
             if (contextMenu == null) {
 
-                menu_apacheStatus.Text = sc_apache.StatusStr();
                 sc_apache.menuItem = menu_apacheStatus;
-                menu_mysqldStatus.Text = sc_apache.StatusStr();
+                sc_apache.ChangeStatus(false);
                 sc_mysqld.menuItem = menu_mysqldStatus;
+                sc_mysqld.ChangeStatus(false);
 
                 menu_apacheStart.Text = "Apache Start/Stop";
                 menu_apacheStart.Click += MenuApacheStart_Click;
@@ -97,6 +108,11 @@ namespace MyLittleTools3
             return contextMenu;
         }
 
+        private void MenuExit_Click(object sender, System.EventArgs e)
+        {
+            System.Windows.Application.Current.Shutdown();
+        }
+
         private void MenuAllStop_Click(object sender, System.EventArgs e)
         {
             StopService(sc_apache);
@@ -123,7 +139,7 @@ namespace MyLittleTools3
 
         private void MenuApacheStart_Click(object sender, System.EventArgs e)
         {
-            if (sc_apache.serviceStatus) {
+            if (sc_apache.IsRunning) {
                 StopService(sc_apache);
             } else {
                 StartService(sc_apache);
@@ -132,16 +148,11 @@ namespace MyLittleTools3
 
         private void MenuMysqlStart_Click(object sender, System.EventArgs e)
         {
-            if (sc_mysqld.serviceStatus) {
+            if (sc_mysqld.IsRunning) {
                 StopService(sc_mysqld);
             } else {
                 StartService(sc_mysqld);
             }
-        }
-
-        private void MenuExit_Click(object sender, System.EventArgs e)
-        {
-            System.Windows.Application.Current.Shutdown();
         }
 
         private void StartService(Service service)
@@ -151,6 +162,8 @@ namespace MyLittleTools3
                 sc.Start();
                 sc.WaitForStatus(ServiceControllerStatus.Running);
                 service.ChangeStatus(true);
+                notifyIcon.BalloonTipText = service.serviceStatus;
+                notifyIcon.ShowBalloonTip(2000);
             }
         }
 
@@ -161,6 +174,8 @@ namespace MyLittleTools3
                 sc.Stop();
                 sc.WaitForStatus(ServiceControllerStatus.Stopped);
                 service.ChangeStatus(false);
+                notifyIcon.BalloonTipText = service.serviceStatus;
+                notifyIcon.ShowBalloonTip(2000);
             }
         }
 

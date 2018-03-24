@@ -25,19 +25,8 @@ namespace MyLittleTools3
             lsvJumpList.ItemsSource = myJumpList.JTData;
             ListFiles.ItemsSource = myFileTool.fileList;
             tabMain.SelectedIndex = tabidx;
-            notifyIcon.Icon = System.Drawing.Icon.ExtractAssociatedIcon(System.Windows.Forms.Application.ExecutablePath);
-            notifyIcon.ContextMenuStrip = notifyMenu.Instance();
+            notifyMenu.SetNotifyIcon(notifyIcon);
             notifyIcon.MouseClick += NotifyIcon_Click;
-            notifyIcon.Visible = true;
-        }
-
-        private void NotifyIcon_Click(object sender, MouseEventArgs e)
-        {
-            if (e.Button == MouseButtons.Right) {
-                notifyIcon.ContextMenuStrip.Show();
-            } else {
-                WindowState = WindowState.Normal;
-            }
         }
 
         #region 跳转列表
@@ -310,6 +299,14 @@ namespace MyLittleTools3
             }
         }
 
+        private void NotifyIcon_Click(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right) {
+                notifyIcon.ContextMenuStrip.Show();
+            } else {
+                WindowState = WindowState.Normal;
+            }
+        }
 
         #endregion
 
