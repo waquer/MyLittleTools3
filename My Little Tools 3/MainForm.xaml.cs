@@ -25,8 +25,10 @@ namespace MyLittleTools3
             lsvJumpList.ItemsSource = myJumpList.JTData;
             ListFiles.ItemsSource = myFileTool.fileList;
             tabMain.SelectedIndex = tabidx;
-            notifyMenu.SetNotifyIcon(notifyIcon);
+            notifyIcon.Icon = System.Drawing.Icon.ExtractAssociatedIcon(System.Windows.Forms.Application.ExecutablePath);
+            notifyIcon.ContextMenuStrip = notifyMenu.GetNotifyMenu();
             notifyIcon.MouseClick += NotifyIcon_Click;
+            notifyIcon.Visible = true;
         }
 
         #region 跳转列表

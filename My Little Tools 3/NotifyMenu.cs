@@ -1,6 +1,6 @@
-﻿using System.Drawing;
-using System.Windows.Forms;
+﻿using System.Windows.Forms;
 using System.ServiceProcess;
+using System;
 
 namespace MyLittleTools3
 {
@@ -32,6 +32,7 @@ namespace MyLittleTools3
 
     class NotifyMenu
     {
+        private NotifyForm notifyForm = new NotifyForm();
 
         private Service sc_apache = new Service("Apache", "wampapache64");
         private Service sc_mysqld = new Service("MySQL", "wampmysqld64");
@@ -48,16 +49,6 @@ namespace MyLittleTools3
         private ToolStripMenuItem menu_exit = new ToolStripMenuItem();
 
         private ContextMenuStrip contextMenu;
-
-        private NotifyIcon notifyIcon;
-
-        public void SetNotifyIcon(NotifyIcon notifyIcon)
-        {
-            this.notifyIcon = notifyIcon;
-            notifyIcon.Icon = Icon.ExtractAssociatedIcon(Application.ExecutablePath);
-            notifyIcon.ContextMenuStrip = GetNotifyMenu();
-            notifyIcon.Visible = true;
-        }
 
         public ContextMenuStrip GetNotifyMenu()
         {
@@ -157,25 +148,31 @@ namespace MyLittleTools3
 
         private void StartService(Service service)
         {
+            notifyForm.Show();
             ServiceController sc = new ServiceController(service.serviceName);
             if (sc.Status == ServiceControllerStatus.Stopped) {
+                notifyForm.NotifyText.AppendText("Starting " + service.serviceTitle + Environment.NewLine);
                 sc.Start();
                 sc.WaitForStatus(ServiceControllerStatus.Running);
                 service.ChangeStatus(true);
-                notifyIcon.BalloonTipText = service.serviceStatus;
-                notifyIcon.ShowBalloonTip(2000);
+                notifyForm.NotifyText.AppendText(service.serviceTitle + " is Running" + Environment.NewLine);
+            } else {
+                notifyForm.NotifyText.AppendText(service.serviceTitle + " is not Running" + Environment.NewLine);
             }
         }
 
         private void StopService(Service service)
         {
+            notifyForm.Show();
             ServiceController sc = new ServiceController(service.serviceName);
             if (sc.Status != ServiceControllerStatus.Stopped) {
+                notifyForm.NotifyText.AppendText("Stopping " + service.serviceTitle + Environment.NewLine);
                 sc.Stop();
                 sc.WaitForStatus(ServiceControllerStatus.Stopped);
                 service.ChangeStatus(false);
-                notifyIcon.BalloonTipText = service.serviceStatus;
-                notifyIcon.ShowBalloonTip(2000);
+                notifyForm.NotifyText.AppendText(service.serviceTitle + " is Stopped" + Environment.NewLine);
+            } else {
+                notifyForm.NotifyText.AppendText(service.serviceTitle + " is Stopped" + Environment.NewLine);
             }
         }
 

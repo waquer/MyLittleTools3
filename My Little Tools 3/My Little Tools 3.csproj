@@ -114,6 +114,12 @@
     <Compile Include="EditHosts.xaml.cs">
       <DependentUpon>EditHosts.xaml</DependentUpon>
     </Compile>
+    <Compile Include="NotifyForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="NotifyForm.Designer.cs">
+      <DependentUpon>NotifyForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="MyCodeTool.cs" />
     <Compile Include="MyFileTool.cs" />
     <Compile Include="MyIniTool.cs" />
@@ -139,6 +145,9 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <EmbeddedResource Include="NotifyForm.resx">
+      <DependentUpon>NotifyForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
