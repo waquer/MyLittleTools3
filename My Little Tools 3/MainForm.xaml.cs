@@ -280,7 +280,7 @@ namespace MyLittleTools3
             if (System.Windows.MessageBox.Show("此操作将覆盖原程序，确定吗？", "程序更新", MessageBoxButton.OKCancel) == MessageBoxResult.OK) {
 
                 String FileNew = System.Reflection.Assembly.GetEntryAssembly().Location;
-                String FileOld = @"D:\My Little Tools\My Little Tools.exe";
+                String FileOld = @"D:\OtherTool\My Little Tools.exe";
                 File.Copy(FileNew, FileOld, true);
             }
         }

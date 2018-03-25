@@ -32,10 +32,13 @@
             // 
             // NotifyText
             // 
+            this.NotifyText.BackColor = System.Drawing.Color.White;
             this.NotifyText.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.NotifyText.Font = new System.Drawing.Font("Consolas", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.NotifyText.Location = new System.Drawing.Point(0, 0);
             this.NotifyText.Multiline = true;
             this.NotifyText.Name = "NotifyText";
+            this.NotifyText.ReadOnly = true;
             this.NotifyText.Size = new System.Drawing.Size(284, 161);
             this.NotifyText.TabIndex = 0;
             // 
@@ -51,6 +54,7 @@
             this.ShowInTaskbar = false;
             this.Text = "Notification";
             this.TopMost = true;
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.NotifyForm_FormClosing);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -58,6 +62,6 @@
 
         #endregion
 
-        public System.Windows.Forms.TextBox NotifyText;
+        private System.Windows.Forms.TextBox NotifyText;
     }
 }

@@ -1,6 +1,6 @@
-﻿using System.Windows.Forms;
+﻿using System;
 using System.ServiceProcess;
-using System;
+using System.Windows.Forms;
 
 namespace MyLittleTools3
 {
@@ -22,9 +22,13 @@ namespace MyLittleTools3
         public string ChangeStatus(bool isRunning)
         {
             this.IsRunning = isRunning;
-            this.serviceStatus = this.serviceTitle + " is " + (isRunning ? "Running" : "Stopped");
-            this.menuItem.Text = this.serviceStatus;
-            return serviceStatus;
+            return this.menuItem.Text = this.serviceStatus = this.serviceTitle + " is " + (isRunning ? "Running" : "Stopped");
+        }
+
+        public string CheckStatus()
+        {
+            ServiceController sc = new ServiceController(this.serviceName);
+            return ChangeStatus(sc.Status == ServiceControllerStatus.Running);
         }
 
     }
@@ -32,7 +36,7 @@ namespace MyLittleTools3
 
     class NotifyMenu
     {
-        private NotifyForm notifyForm = new NotifyForm();
+        public NotifyForm notifyForm = new NotifyForm();
 
         private Service sc_apache = new Service("Apache", "wampapache64");
         private Service sc_mysqld = new Service("MySQL", "wampmysqld64");
@@ -55,9 +59,9 @@ namespace MyLittleTools3
             if (contextMenu == null) {
 
                 sc_apache.menuItem = menu_apacheStatus;
-                sc_apache.ChangeStatus(false);
+                sc_apache.CheckStatus();
                 sc_mysqld.menuItem = menu_mysqldStatus;
-                sc_mysqld.ChangeStatus(false);
+                sc_mysqld.CheckStatus();
 
                 menu_apacheStart.Text = "Apache Start/Stop";
                 menu_apacheStart.Click += MenuApacheStart_Click;
@@ -99,36 +103,36 @@ namespace MyLittleTools3
             return contextMenu;
         }
 
-        private void MenuExit_Click(object sender, System.EventArgs e)
+        private void MenuExit_Click(object sender, EventArgs e)
         {
             System.Windows.Application.Current.Shutdown();
         }
 
-        private void MenuAllStop_Click(object sender, System.EventArgs e)
+        private void MenuAllStop_Click(object sender, EventArgs e)
         {
             StopService(sc_apache);
             StopService(sc_mysqld);
         }
 
-        private void MenuAllStart_Click(object sender, System.EventArgs e)
+        private void MenuAllStart_Click(object sender, EventArgs e)
         {
             StartService(sc_mysqld);
             StartService(sc_apache);
         }
 
-        private void MenuApacheRestart_Click(object sender, System.EventArgs e)
+        private void MenuApacheRestart_Click(object sender, EventArgs e)
         {
             StopService(sc_apache);
             StartService(sc_apache);
         }
 
-        private void MenuMysqlRestart_Click(object sender, System.EventArgs e)
+        private void MenuMysqlRestart_Click(object sender, EventArgs e)
         {
             StopService(sc_mysqld);
             StartService(sc_mysqld);
         }
 
-        private void MenuApacheStart_Click(object sender, System.EventArgs e)
+        private void MenuApacheStart_Click(object sender, EventArgs e)
         {
             if (sc_apache.IsRunning) {
                 StopService(sc_apache);
@@ -137,7 +141,7 @@ namespace MyLittleTools3
             }
         }
 
-        private void MenuMysqlStart_Click(object sender, System.EventArgs e)
+        private void MenuMysqlStart_Click(object sender, EventArgs e)
         {
             if (sc_mysqld.IsRunning) {
                 StopService(sc_mysqld);
@@ -146,34 +150,35 @@ namespace MyLittleTools3
             }
         }
 
+        private void AddLog(string log)
+        {
+            if (notifyForm == null || notifyForm.IsDisposed) {
+                notifyForm = new NotifyForm();
+            }
+            notifyForm.Show();
+            notifyForm.AddLog(log);
+        }
+
         private void StartService(Service service)
         {
-            notifyForm.Show();
             ServiceController sc = new ServiceController(service.serviceName);
-            if (sc.Status == ServiceControllerStatus.Stopped) {
-                notifyForm.NotifyText.AppendText("Starting " + service.serviceTitle + Environment.NewLine);
+            if (sc.Status != ServiceControllerStatus.Running) {
+                this.AddLog("Starting " + service.serviceTitle + "...");
                 sc.Start();
                 sc.WaitForStatus(ServiceControllerStatus.Running);
-                service.ChangeStatus(true);
-                notifyForm.NotifyText.AppendText(service.serviceTitle + " is Running" + Environment.NewLine);
-            } else {
-                notifyForm.NotifyText.AppendText(service.serviceTitle + " is not Running" + Environment.NewLine);
             }
+            this.AddLog(service.ChangeStatus(true));
         }
 
         private void StopService(Service service)
         {
-            notifyForm.Show();
             ServiceController sc = new ServiceController(service.serviceName);
             if (sc.Status != ServiceControllerStatus.Stopped) {
-                notifyForm.NotifyText.AppendText("Stopping " + service.serviceTitle + Environment.NewLine);
+                this.AddLog("Stopping " + service.serviceTitle + "...");
                 sc.Stop();
                 sc.WaitForStatus(ServiceControllerStatus.Stopped);
-                service.ChangeStatus(false);
-                notifyForm.NotifyText.AppendText(service.serviceTitle + " is Stopped" + Environment.NewLine);
-            } else {
-                notifyForm.NotifyText.AppendText(service.serviceTitle + " is Stopped" + Environment.NewLine);
             }
+            this.AddLog(service.ChangeStatus(false));
         }
 
 

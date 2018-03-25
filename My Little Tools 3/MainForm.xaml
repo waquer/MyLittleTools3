@@ -189,11 +189,11 @@
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="100"/>
-                    <ColumnDefinition Width="300"/>
-                    <ColumnDefinition Width="80"/>
+                    <ColumnDefinition Width="240"/>
+                    <ColumnDefinition Width="120"/>
                 </Grid.ColumnDefinitions>
                 <CheckBox x:Name="cbOnTop" Content="总在最上" IsChecked="True" Click="CbOnTop_Click"/>
-                <Button x:Name="btnUpdateSelf" Grid.Column="2" Click="UpdateSelf" Style="{StaticResource linkstyle}">3.0.0.0</Button>
+                <Button x:Name="btnUpdateSelf" Grid.Column="2" Click="UpdateSelf" Style="{StaticResource linkstyle}" HorizontalAlignment="Right">3.0</Button>
             </Grid>
         </StatusBar>
     </Grid>
