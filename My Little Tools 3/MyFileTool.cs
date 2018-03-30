@@ -84,6 +84,15 @@ namespace MyLittleTools3
                 }
             }
         }
+
+        public void DoUpdate(string FilePath)
+        {
+            if (System.Windows.MessageBox.Show("此操作将覆盖原程序，确定吗？", "程序更新", MessageBoxButton.OKCancel) == MessageBoxResult.OK) {
+                String FileNew = System.Reflection.Assembly.GetEntryAssembly().Location;
+                File.Copy(FileNew, FilePath, true);
+            }
+        }
+
     }
 
     class MyFileAttr : INotifyPropertyChanged
