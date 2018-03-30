@@ -110,16 +110,15 @@ namespace MyLittleTools3
 
         private void LoadINI()
         {
-            MyIniTool ini = new MyIniTool();
-
             StringCollection KeyList = new StringCollection();
-            ini.ReadSection("JumpList", KeyList);
+            MyIniTool.ReadSection("JumpList", KeyList);
             foreach (string key in KeyList) {
+                string path = MyIniTool.ReadString("JumpList", key, "");
                 JumpTask jumpTask = new JumpTask {
-                    ApplicationPath = ini.ReadString("JumpList", key, ""),
-                    IconResourcePath = ini.ReadString("JumpList", key, ""),
                     Title = key,
-                    Description = key
+                    Description = key,
+                    ApplicationPath = path,
+                    IconResourcePath = path
                 };
                 this.JTData.Add(jumpTask);
             }
@@ -127,10 +126,9 @@ namespace MyLittleTools3
 
         private void SaveINI()
         {
-            MyIniTool ini = new MyIniTool();
-            ini.EraseSection("JumpList");
+            MyIniTool.EraseSection("JumpList");
             foreach (JumpTask jumpTask in this.JTData) {
-                ini.WriteString("JumpList", jumpTask.Title, jumpTask.ApplicationPath);
+                MyIniTool.WriteString("JumpList", jumpTask.Title, jumpTask.ApplicationPath);
             }
         }
 

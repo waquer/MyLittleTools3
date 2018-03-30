@@ -277,13 +277,28 @@ namespace MyLittleTools3
         /* 更新程序 */
         private void UpdateSelf(object sender, RoutedEventArgs e)
         {
-            if (System.Windows.MessageBox.Show("此操作将覆盖原程序，确定吗？", "程序更新", MessageBoxButton.OKCancel) == MessageBoxResult.OK) {
+            string filepath = MyIniTool.ReadString("Appconfig", "filepath", "");
+            if (filepath.Length > 0) {
+                DoUpdate(filepath);
+            } else {
+                OpenFileDialog OpenFileD = new OpenFileDialog();
+                if (OpenFileD.ShowDialog() == System.Windows.Forms.DialogResult.OK) {
+                    filepath = OpenFileD.FileName;
+                    MyIniTool.WriteString("Appconfig", "filepath", filepath);
+                    DoUpdate(filepath);
+                }
+            }
 
+        }
+
+        private void DoUpdate(string FileOld)
+        {
+            if (System.Windows.MessageBox.Show("此操作将覆盖原程序，确定吗？", "程序更新", MessageBoxButton.OKCancel) == MessageBoxResult.OK) {
                 String FileNew = System.Reflection.Assembly.GetEntryAssembly().Location;
-                String FileOld = @"D:\OtherTool\My Little Tools.exe";
                 File.Copy(FileNew, FileOld, true);
             }
         }
+
 
         /* 设置窗体总在最上状态 */
         private void CbOnTop_Click(object sender, RoutedEventArgs e)
