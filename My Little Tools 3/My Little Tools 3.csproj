@@ -115,6 +115,22 @@
     <Compile Include="EditHosts.xaml.cs">
       <DependentUpon>EditHosts.xaml</DependentUpon>
     </Compile>
+    <Compile Include="MainForm.code.cs">
+      <DependentUpon>MainForm.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MainForm.file.cs">
+      <DependentUpon>MainForm.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MainForm.jumplist.cs">
+      <DependentUpon>MainForm.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MainForm.text.cs">
+      <DependentUpon>MainForm.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="NotifyForm.cs">
       <SubType>Form</SubType>
     </Compile>
