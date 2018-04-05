@@ -6,29 +6,36 @@ namespace MyLittleTools3
 {
     class Service
     {
-        public string serviceName;
-        public string serviceTitle;
-        public string serviceStatus;
 
         public bool IsRunning = false;
-        public ToolStripMenuItem menuItem;
+        public string serviceName = String.Empty;
+        public string serviceTitle = String.Empty;
+        public ServiceController serviceCtrl = null;
+        public ToolStripMenuItem menuItem = null;
 
         public Service(string serviceTitle)
         {
             this.serviceTitle = serviceTitle;
-            this.serviceName = MyIniTool.ReadString("Service", serviceTitle, "");
+            this.serviceName = MyIniTool.ReadString("Service", serviceTitle, serviceTitle);
+            if (this.serviceName.Length > 0) {
+                this.serviceCtrl = new ServiceController(this.serviceName);
+            }
         }
 
         public string ChangeStatus(bool isRunning)
         {
             this.IsRunning = isRunning;
-            return this.menuItem.Text = this.serviceStatus = this.serviceTitle + " is " + (isRunning ? "Running" : "Stopped");
+            return this.menuItem.Text = this.serviceTitle + " is " + (isRunning ? "Running" : "Stopped");
         }
 
         public string CheckStatus()
         {
-            ServiceController sc = new ServiceController(this.serviceName);
-            return ChangeStatus(sc.Status == ServiceControllerStatus.Running);
+            try {
+                return ChangeStatus(serviceCtrl.Status == ServiceControllerStatus.Running);
+            } catch (Exception) {
+                this.serviceCtrl = null;
+                return this.menuItem.Text = this.serviceTitle + " is Invalid";
+            }
         }
 
     }
@@ -161,24 +168,28 @@ namespace MyLittleTools3
 
         private void StartService(Service service)
         {
-            ServiceController sc = new ServiceController(service.serviceName);
-            if (sc.Status != ServiceControllerStatus.Running) {
-                this.AddLog("Starting " + service.serviceTitle + "...");
-                sc.Start();
-                sc.WaitForStatus(ServiceControllerStatus.Running);
+            ServiceController sc = service.serviceCtrl;
+            if (sc != null) {
+                if (sc.Status != ServiceControllerStatus.Running) {
+                    this.AddLog("Starting " + service.serviceTitle + "...");
+                    sc.Start();
+                    sc.WaitForStatus(ServiceControllerStatus.Running);
+                }
+                this.AddLog(service.ChangeStatus(true));
             }
-            this.AddLog(service.ChangeStatus(true));
         }
 
         private void StopService(Service service)
         {
-            ServiceController sc = new ServiceController(service.serviceName);
-            if (sc.Status != ServiceControllerStatus.Stopped) {
-                this.AddLog("Stopping " + service.serviceTitle + "...");
-                sc.Stop();
-                sc.WaitForStatus(ServiceControllerStatus.Stopped);
+            ServiceController sc = service.serviceCtrl;
+            if (sc != null) {
+                if (sc.Status != ServiceControllerStatus.Stopped) {
+                    this.AddLog("Stopping " + service.serviceTitle + "...");
+                    sc.Stop();
+                    sc.WaitForStatus(ServiceControllerStatus.Stopped);
+                }
+                this.AddLog(service.ChangeStatus(false));
             }
-            this.AddLog(service.ChangeStatus(false));
         }
 
 

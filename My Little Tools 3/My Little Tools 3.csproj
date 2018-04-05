@@ -100,7 +100,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="RegistryTool.cs" />
+    <Compile Include="MyTools\RegistryTool.cs" />
     <Page Include="EditHosts.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -138,18 +138,18 @@
     <Compile Include="NotifyForm.Designer.cs">
       <DependentUpon>NotifyForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="MyCodeTool.cs" />
-    <Compile Include="MyFileTool.cs" />
-    <Compile Include="MyIniTool.cs" />
-    <Compile Include="MyJumpList.cs" />
+    <Compile Include="MyTools\MyCodeTool.cs" />
+    <Compile Include="MyTools\MyFileTool.cs" />
+    <Compile Include="MyTools\MyIniTool.cs" />
+    <Compile Include="MyTools\MyJumpList.cs" />
     <Compile Include="MainForm.xaml.cs">
       <DependentUpon>MainForm.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="MyTextTool.cs" />
-    <Compile Include="NotifyMenu.cs" />
+    <Compile Include="MyTools\MyTextTool.cs" />
+    <Compile Include="MyTools\NotifyMenu.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
