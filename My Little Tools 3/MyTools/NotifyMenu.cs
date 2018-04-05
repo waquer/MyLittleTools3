@@ -159,7 +159,7 @@ namespace MyLittleTools3
 
         private void AddLog(string log)
         {
-            if (notifyForm == null || notifyForm.IsDisposed) {
+            if (notifyForm == null) {
                 notifyForm = new NotifyForm();
             }
             notifyForm.Show();

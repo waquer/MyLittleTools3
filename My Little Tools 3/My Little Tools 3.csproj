@@ -132,12 +132,6 @@
       <DependentUpon>MainForm.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="NotifyForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="NotifyForm.Designer.cs">
-      <DependentUpon>NotifyForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="MyTools\MyCodeTool.cs" />
     <Compile Include="MyTools\MyFileTool.cs" />
     <Compile Include="MyTools\MyIniTool.cs" />
@@ -146,10 +140,17 @@
       <DependentUpon>MainForm.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="NotifyForm.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MyTools\MyTextTool.cs" />
     <Compile Include="MyTools\NotifyMenu.cs" />
+    <Compile Include="NotifyForm.xaml.cs">
+      <DependentUpon>NotifyForm.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -163,9 +164,6 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <EmbeddedResource Include="NotifyForm.resx">
-      <DependentUpon>NotifyForm.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
