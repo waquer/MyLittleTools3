@@ -13,10 +13,10 @@ namespace MyLittleTools3
         public bool IsRunning = false;
         public ToolStripMenuItem menuItem;
 
-        public Service(string serviceTitle, string serviceName)
+        public Service(string serviceTitle)
         {
             this.serviceTitle = serviceTitle;
-            this.serviceName = serviceName;
+            this.serviceName = MyIniTool.ReadString("Service", serviceTitle, "");
         }
 
         public string ChangeStatus(bool isRunning)
@@ -38,8 +38,8 @@ namespace MyLittleTools3
     {
         public NotifyForm notifyForm = new NotifyForm();
 
-        private Service sc_apache = new Service("Apache", "wampapache64");
-        private Service sc_mysqld = new Service("MySQL", "wampmysqld64");
+        private Service sc_apache = new Service("Apache");
+        private Service sc_mysqld = new Service("MySQL");
 
         private ToolStripSeparator menu_sp = new ToolStripSeparator();
         private ToolStripMenuItem menu_apacheStatus = new ToolStripMenuItem();

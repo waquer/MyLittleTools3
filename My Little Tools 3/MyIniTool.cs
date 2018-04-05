@@ -14,16 +14,7 @@ namespace MyLittleTools3
         [DllImport("kernel32")]
         private static extern int GetPrivateProfileString(string section, string key, string def, byte[] retVal, int size, string filePath);
 
-        public String iniFile;
-
-        public MyIniTool(String iniPath = "")
-        {
-            if (File.Exists(iniPath)) {
-                iniFile = iniPath;
-            } else {
-                iniFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "My Little Tools.ini");
-            }
-        }
+        public static String iniFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "My Little Tools.ini");
 
         /// <summary>
         /// 写INI文件
@@ -31,7 +22,7 @@ namespace MyLittleTools3
         /// <param name="Section"></param>
         /// <param name="Ident"></param>
         /// <param name="Value"></param>
-        public void WriteString(string Section, string Ident, string Value)
+        public static void WriteString(string Section, string Ident, string Value)
         {
             if (!WritePrivateProfileString(Section, Ident, Value, iniFile)) {
                 throw (new ApplicationException("写入INI文件出错"));
@@ -45,7 +36,7 @@ namespace MyLittleTools3
         /// <param name="Ident"></param>
         /// <param name="Default"></param>
         /// <returns></returns>
-        public string ReadString(string Section, string Ident, string Default)
+        public static string ReadString(string Section, string Ident, string Default)
         {
             Byte[] Buffer = new Byte[65535];
             int bufLen = GetPrivateProfileString(Section, Ident, Default, Buffer, Buffer.GetUpperBound(0), iniFile);
@@ -62,7 +53,7 @@ namespace MyLittleTools3
         /// <param name="Ident"></param>
         /// <param name="Default"></param>
         /// <returns></returns>
-        public int ReadInteger(string Section, string Ident, int Default)
+        public static int ReadInteger(string Section, string Ident, int Default)
         {
             string intStr = ReadString(Section, Ident, Convert.ToString(Default));
             try {
@@ -80,7 +71,7 @@ namespace MyLittleTools3
         /// <param name="Section"></param>
         /// <param name="Ident"></param>
         /// <param name="Value"></param>
-        public void WriteInteger(string Section, string Ident, int Value)
+        public static void WriteInteger(string Section, string Ident, int Value)
         {
             WriteString(Section, Ident, Value.ToString());
         }
@@ -90,7 +81,7 @@ namespace MyLittleTools3
         /// </summary>
         /// <param name="Section"></param>
         /// <param name="Idents"></param>
-        public void ReadSection(string Section, StringCollection Idents)
+        public static void ReadSection(string Section, StringCollection Idents)
         {
             Byte[] Buffer = new Byte[16384];
             //Idents.Clear();
@@ -103,7 +94,7 @@ namespace MyLittleTools3
         /// 读取所有的Sections的名称
         /// </summary>
         /// <param name="SectionList"></param>
-        public void ReadSections(StringCollection SectionList)
+        public static void ReadSections(StringCollection SectionList)
         {
             //Note:必须得用Bytes来实现，StringBuilder只能取到第一个 Section
             byte[] Buffer = new byte[65535];
@@ -116,14 +107,14 @@ namespace MyLittleTools3
         /// 清除某个Section
         /// </summary>
         /// <param name="Section"></param>
-        public void EraseSection(string Section)
+        public static void EraseSection(string Section)
         {
             if (!WritePrivateProfileString(Section, null, null, iniFile)) {
                 throw (new ApplicationException("清除INI文件出错"));
             }
         }
 
-        private void GetStringsFromBuffer(Byte[] Buffer, int bufLen, StringCollection Strings)
+        private static void GetStringsFromBuffer(Byte[] Buffer, int bufLen, StringCollection Strings)
         {
             Strings.Clear();
             if (bufLen != 0) {
