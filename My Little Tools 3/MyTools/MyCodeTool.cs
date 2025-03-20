@@ -1,61 +1,56 @@
 ﻿using System;
-using System.IO;
-using System.Web;
-using System.Text;
-using System.Security.Cryptography;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.IO;
+using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
+using System.Web;
 
-
-namespace MyLittleTools3
+namespace MyLittleTools3.MyTools
 {
-    class MyCodeTool
+    internal class MyCodeTool
     {
-        private Encoding MyEncoding;
-        private Boolean IfDecode;
+        private Encoding _myEncoding = Encoding.Default;
+        private bool _ifDecode;
 
-        public String InputString;
-        public String CodeMethod;
-        public String CodeCharset {
-            set {
-                if (value.ToUpper().Equals("ASCII"))
-                    MyEncoding = ASCIIEncoding.Default;
-                else
-                    MyEncoding = UTF8Encoding.Default;
-            }
-        }
-        public String CodeType {
-            set {
-                IfDecode = value.ToLower() == "decode";
+        public string InputString = "";
+        public string CodeMethod = "";
+
+        public string CodeCharset
+        {
+            set
+            {
+                InputString = value;
+                _myEncoding = Encoding.Default;
             }
         }
 
-        public MyCodeTool()
+        public string CodeType
         {
-            InputString = "";
-            CodeMethod = "";
-            IfDecode = false;
-            MyEncoding = UTF8Encoding.Default;
+            set => _ifDecode = value.ToLower() == "decode";
         }
 
-        public String DoCoding()
+        public string DoCoding()
         {
-            switch (CodeMethod) {
+            switch (CodeMethod)
+            {
                 case "BASE64":
-                    return IfDecode ? DoBase64Decode() : DoBase64Encode();
+                    return _ifDecode ? DoBase64Decode() : DoBase64Encode();
                 case "URL":
-                    return IfDecode ? DoUrlDecode() : DoUrlEncode();
+                    return _ifDecode ? DoUrlDecode() : DoUrlEncode();
                 default:
-                    return IfDecode ? "暂不支持" : DoHash(CodeMethod);
+                    return _ifDecode ? "暂不支持" : DoHash(CodeMethod);
             }
         }
 
         /* HASH编码 */
-        private String DoHash(String method)
+        private string DoHash(string method)
         {
             HashAlgorithm algorithm;
 
-            switch (method) {
+            switch (method)
+            {
                 case "MD5":
                     algorithm = MD5.Create();
                     break;
@@ -70,41 +65,46 @@ namespace MyLittleTools3
             }
 
             byte[] hashBytes;
-            String result = "";
 
-            if (File.Exists(InputString)) {
-                FileStream fs = new FileStream(InputString, FileMode.Open, FileAccess.Read);
+            if (File.Exists(InputString))
+            {
+                var fs = new FileStream(InputString, FileMode.Open, FileAccess.Read);
                 hashBytes = algorithm.ComputeHash(fs);
                 fs.Close();
-            } else {
-                hashBytes = algorithm.ComputeHash(MyEncoding.GetBytes(InputString));
             }
-            for (int i = 0; i < hashBytes.Length; i++)
-                result += hashBytes[i].ToString("x").PadLeft(2, '0');
+            else
+            {
+                hashBytes = algorithm.ComputeHash(_myEncoding.GetBytes(InputString));
+            }
+
+            var result = hashBytes.Aggregate("", (current, t) => current + t.ToString("x").PadLeft(2, '0'));
+
             result = result.ToUpper();
             return result;
         }
 
         /* URL编码 */
-        private String DoUrlEncode()
+        private string DoUrlEncode()
         {
             return HttpUtility.UrlEncode(InputString);
         }
 
         /* URL解码 */
-        private String DoUrlDecode()
+        private string DoUrlDecode()
         {
             return HttpUtility.UrlDecode(InputString);
         }
 
         /* BASE64编码 */
-        private String DoBase64Encode()
+        private string DoBase64Encode()
         {
-            if (File.Exists(InputString)) {
-                String result = "";
-                Image img = Image.FromFile(InputString);
-                MemoryStream mstream = new MemoryStream();
-                switch (Path.GetExtension(InputString).ToLower()) {
+            if (File.Exists(InputString))
+            {
+                string result;
+                var img = Image.FromFile(InputString);
+                var mstream = new MemoryStream();
+                switch (Path.GetExtension(InputString).ToLower())
+                {
                     case ".bmp":
                         img.Save(mstream, ImageFormat.Bmp);
                         result = "data:image/bmp;base64," + Convert.ToBase64String(mstream.GetBuffer());
@@ -130,27 +130,30 @@ namespace MyLittleTools3
                         result = "无法识别的类型";
                         break;
                 }
+
                 mstream.Dispose();
                 img.Dispose();
                 return result;
-            } else {
-
-                byte[] bytedata = MyEncoding.GetBytes(InputString);
+            }
+            else
+            {
+                var bytedata = _myEncoding.GetBytes(InputString);
                 return Convert.ToBase64String(bytedata, 0, bytedata.Length);
             }
         }
 
         /* BASE64解码 */
-        private String DoBase64Decode()
+        private string DoBase64Decode()
         {
-            try {
-                Byte[] bytes = Convert.FromBase64String(InputString);
-                return MyEncoding.GetString(bytes);
-            } catch {
+            try
+            {
+                var bytes = Convert.FromBase64String(InputString);
+                return _myEncoding.GetString(bytes);
+            }
+            catch
+            {
                 return "不是有效的BASE64编码";
             }
-
         }
-
     }
 }

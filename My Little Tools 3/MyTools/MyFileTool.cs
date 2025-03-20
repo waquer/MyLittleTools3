@@ -1,202 +1,166 @@
 ﻿using System;
 using System.Collections.Generic;
-
 using System.ComponentModel;
 using System.IO;
+using System.Linq;
 using System.Windows;
 
-namespace MyLittleTools3
+namespace MyLittleTools3.MyTools
 {
-
-    class MyFileTool
+    internal class MyFileTool
     {
         private class RenameRule
         {
-            public String path;
-            public String oldname;
-            public String newname;
+            public string Path;
+            public string OldName;
+            public string NewName;
         }
-        private List<RenameRule> renameList;
+        private List<RenameRule> _renameList;
 
-        public List<String> fileList = new List<String>();
-        public String fileSource = "";
-        public String fileTarget = "";
+        public readonly List<string> FileList = new List<string>();
+        public string FileSource = "";
+        public string FileTarget = "";
 
-        public String BatchRename()
+        public string BatchRename()
         {
-            if (this.fileSource == "") {
+            if (this.FileSource == "") {
                 return "参数有误";
             }
 
-            renameList = new List<RenameRule>();
+            _renameList = new List<RenameRule>();
 
-            int length = this.fileList.Count;
-            for (int i = 0; i < length; i++) {
-                RenameRule rule = new RenameRule {
-                    path = Path.GetDirectoryName(fileList[i]),
-                    oldname = Path.GetFileName(fileList[i])
-                };
-                if (fileTarget == null) {
+            var length = this.FileList.Count;
+            for (var i = 0; i < length; i++) {
+                var rule = new RenameRule {
+                    Path = Path.GetDirectoryName(FileList[i]),
+                    OldName = Path.GetFileName(FileList[i]),
                     // 模板方式
-                    rule.newname = fileSource.Replace("*", (i + 1).ToString().PadLeft(length.ToString().Length, '0'));
-                } else {
-                    //字符替换
-                    rule.newname = Path.GetFileNameWithoutExtension(fileList[i]).Replace(fileSource, fileTarget);
-                }
-                rule.newname = rule.newname + Path.GetExtension(fileList[i]);
-                renameList.Add(rule);
+                    NewName = FileTarget == null ? FileSource.Replace("*", (i + 1).ToString().PadLeft(length.ToString().Length, '0')) :
+                        //字符替换
+                        Path.GetFileNameWithoutExtension(FileList[i])?.Replace(FileSource, FileTarget)
+                };
+                rule.NewName += Path.GetExtension(FileList[i]);
+                _renameList.Add(rule);
             }
             return RenameView();
         }
 
-        private String RenameView()
+        private string RenameView()
         {
-            String text = "程序错误";
-            if (this.renameList.Count > 0) {
-                text = "";
-                foreach (RenameRule rule in renameList) {
-                    text += rule.oldname + "\t" + "→" + "\t" + rule.newname + Environment.NewLine;
-                }
-            }
-            return text;
+            const string text = "程序错误";
+            return _renameList.Count <= 0 ? text : _renameList.Aggregate("", (current, rule) => current + (rule.OldName + "\t" + "→" + "\t" + rule.NewName + Environment.NewLine));
         }
 
         public void DoRename()
         {
-            int length = this.renameList.Count;
-            if (length > 0) {
-                for (int i = 0; i < length; i++) {
-                    RenameRule rule = this.renameList[i];
+            var length = _renameList.Count;
+            if (length <= 0) return;
+            for (var i = 0; i < length; i++) {
+                var rule = _renameList[i];
+                try {
+                    File.Move(Path.Combine(rule.Path, rule.OldName), Path.Combine(rule.Path, rule.NewName));
+                } catch (Exception) {
+                    var newName = "ErrFile" + i + "-" + rule.NewName;
+                    rule.NewName = newName;
                     try {
-                        File.Move(Path.Combine(rule.path, rule.oldname), Path.Combine(rule.path, rule.newname));
+                        File.Move(Path.Combine(rule.Path, rule.OldName), Path.Combine(rule.Path, rule.NewName));
                     } catch (Exception) {
-                        String newname = "ErrFile" + i.ToString() + "-" + rule.newname;
-                        rule.newname = newname;
-                        try {
-                            File.Move(Path.Combine(rule.path, rule.oldname), Path.Combine(rule.path, rule.newname));
-                        } catch (Exception) {
-                            rule.newname = rule.oldname;
-                        } finally {
-                            this.renameList[i] = rule;
-                        }
+                        rule.NewName = rule.OldName;
                     } finally {
-                        this.fileList[i] = Path.Combine(rule.path, rule.newname);
+                       _renameList[i] = rule;
                     }
+                } finally {
+                    FileList[i] = Path.Combine(rule.Path, rule.NewName);
                 }
             }
         }
 
         public void DoUpdate(string FilePath)
         {
-            if (System.Windows.MessageBox.Show("此操作将覆盖原程序，确定吗？", "程序更新", MessageBoxButton.OKCancel) == MessageBoxResult.OK) {
-                String FileNew = System.Reflection.Assembly.GetEntryAssembly().Location;
-                File.Copy(FileNew, FilePath, true);
-            }
+            if (MessageBox.Show("此操作将覆盖原程序，确定吗？", "程序更新", MessageBoxButton.OKCancel) !=
+                MessageBoxResult.OK) return;
+            var fileNew = System.Reflection.Assembly.GetEntryAssembly()?.Location;
+            if (fileNew != null) File.Copy(fileNew, FilePath, true);
         }
 
     }
 
-    class MyFileAttr : INotifyPropertyChanged
+    internal class MyFileAttr : INotifyPropertyChanged
     {
-        private String filePath;
-        private FileAttributes fileAttr;
+        private readonly string _filePath;
+        private FileAttributes _fileAttr;
 
-        public MyFileAttr(String FilePath)
+        public MyFileAttr(string FilePath)
         {
             if (File.Exists(FilePath)) {
-                this.filePath = FilePath;
-                this.fileAttr = File.GetAttributes(this.filePath);
+                _filePath = FilePath;
+                _fileAttr = File.GetAttributes(_filePath);
             } else {
-                this.filePath = "";
-                this.fileAttr = 0;
+                _filePath = "";
+                _fileAttr = 0;
             }
             NotifyChanged();
         }
 
-        public Boolean ReadOnly {
-            get {
-                return (this.fileAttr & FileAttributes.ReadOnly) == FileAttributes.ReadOnly;
-            }
-            set {
-                this.ChangeAttr(FileAttributes.ReadOnly, value);
-            }
+        public bool ReadOnly {
+            get => (_fileAttr & FileAttributes.ReadOnly) == FileAttributes.ReadOnly;
+            set => ChangeAttr(FileAttributes.ReadOnly, value);
         }
 
-        public Boolean Hidden {
-            get {
-                return (this.fileAttr & FileAttributes.Hidden) == FileAttributes.Hidden;
-            }
-            set {
-                this.ChangeAttr(FileAttributes.Hidden, value);
-            }
+        public bool Hidden {
+            get => (_fileAttr & FileAttributes.Hidden) == FileAttributes.Hidden;
+            set => ChangeAttr(FileAttributes.Hidden, value);
         }
 
-        public Boolean Archive {
-            get {
-                return (this.fileAttr & FileAttributes.Archive) == FileAttributes.Archive;
-            }
-            set {
-                this.ChangeAttr(FileAttributes.Archive, value);
-            }
+        public bool Archive {
+            get => (_fileAttr & FileAttributes.Archive) == FileAttributes.Archive;
+            set => ChangeAttr(FileAttributes.Archive, value);
         }
 
-        public Boolean System {
-            get {
-                return (this.fileAttr & FileAttributes.System) == FileAttributes.System;
-            }
-            set {
-                this.ChangeAttr(FileAttributes.System, value);
-            }
+        public bool System {
+            get => (_fileAttr & FileAttributes.System) == FileAttributes.System;
+            set => ChangeAttr(FileAttributes.System, value);
         }
 
-        public Boolean Normal {
-            get {
-                return (this.fileAttr & FileAttributes.Normal) == FileAttributes.Normal;
-            }
-            set {
-                this.ChangeAttr(FileAttributes.Normal, value);
-            }
+        public bool Normal {
+            get => (_fileAttr & FileAttributes.Normal) == FileAttributes.Normal;
+            set => ChangeAttr(FileAttributes.Normal, value);
         }
 
-        public Boolean NotContentIndexed {
-            get {
-                return (this.fileAttr & FileAttributes.NotContentIndexed) == FileAttributes.NotContentIndexed;
-            }
-            set {
-                this.ChangeAttr(FileAttributes.NotContentIndexed, value);
-            }
+        public bool NotContentIndexed {
+            get => (_fileAttr & FileAttributes.NotContentIndexed) == FileAttributes.NotContentIndexed;
+            set => ChangeAttr(FileAttributes.NotContentIndexed, value);
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public void NotifyChanged()
+        private void NotifyChanged()
         {
-            if (PropertyChanged != null) {
-                PropertyChanged.Invoke(this, new PropertyChangedEventArgs("ReadOnly"));
-                PropertyChanged.Invoke(this, new PropertyChangedEventArgs("Hidden"));
-                PropertyChanged.Invoke(this, new PropertyChangedEventArgs("Archive"));
-                PropertyChanged.Invoke(this, new PropertyChangedEventArgs("NotContentIndexed"));
-                PropertyChanged.Invoke(this, new PropertyChangedEventArgs("System"));
-                PropertyChanged.Invoke(this, new PropertyChangedEventArgs("Normal"));
-            }
+            if (PropertyChanged == null) return;
+            PropertyChanged.Invoke(this, new PropertyChangedEventArgs("ReadOnly"));
+            PropertyChanged.Invoke(this, new PropertyChangedEventArgs("Hidden"));
+            PropertyChanged.Invoke(this, new PropertyChangedEventArgs("Archive"));
+            PropertyChanged.Invoke(this, new PropertyChangedEventArgs("NotContentIndexed"));
+            PropertyChanged.Invoke(this, new PropertyChangedEventArgs("System"));
+            PropertyChanged.Invoke(this, new PropertyChangedEventArgs("Normal"));
         }
 
-        public void ChangeAttr(FileAttributes attr, Boolean value)
+        private void ChangeAttr(FileAttributes attr, bool value)
         {
-            if (this.filePath != "") {
+            if (_filePath != "") {
                 if (attr == FileAttributes.Normal) {
                     if (value) {
-                        this.fileAttr = FileAttributes.Normal;
+                        _fileAttr = FileAttributes.Normal;
                     }
                 } else {
                     if (value) {
-                        this.fileAttr = fileAttr | attr;
-                        this.fileAttr = fileAttr & ~FileAttributes.Normal;
+                        _fileAttr |= attr;
+                        _fileAttr &= ~FileAttributes.Normal;
                     } else {
-                        this.fileAttr = fileAttr & ~attr;
+                        _fileAttr &= ~attr;
                     }
                 }
-                File.SetAttributes(this.filePath, this.fileAttr);
+                File.SetAttributes(_filePath, _fileAttr);
             }
             NotifyChanged();
         }

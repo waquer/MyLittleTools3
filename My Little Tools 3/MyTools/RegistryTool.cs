@@ -1,22 +1,22 @@
 ﻿using Microsoft.Win32;
 
-namespace MyLittleTools3
+namespace MyLittleTools3.MyTools
 {
-    class RegistryTool
+    internal class RegistryTool
     {
-        RegistryKey key = Registry.LocalMachine.CreateSubKey("Software\\MyLittleTools");
+        private readonly RegistryKey _key = Registry.LocalMachine.CreateSubKey("Software\\MyLittleTools");
 
 
         public void SetValue(string name, string value)
         {
-            key.SetValue(name, value, RegistryValueKind.String);
-            key.Close();
+            _key.SetValue(name, value, RegistryValueKind.String);
+            _key.Close();
         }
 
         public string GetValue(string name)
         {
-            string value = key.GetValue(name).ToString();
-            key.Close();
+            var value = _key.GetValue(name).ToString();
+            _key.Close();
             return value;
         }
 

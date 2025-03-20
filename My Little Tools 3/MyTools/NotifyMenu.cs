@@ -1,49 +1,45 @@
 ﻿using System;
-using System.ServiceProcess;
 using System.Windows.Forms;
 
-namespace MyLittleTools3
+namespace MyLittleTools3.MyTools
 {
-    class NotifyMenu
+    internal class NotifyMenu
     {
-        public NotifyForm notifyForm = new NotifyForm();
+        private NotifyForm _notifyForm = new NotifyForm();
 
-        private ToolStripSeparator menu_sp = new ToolStripSeparator();
+        private readonly ToolStripSeparator _menuSp = new ToolStripSeparator();
 
-        private ToolStripMenuItem menu_exit = new ToolStripMenuItem();
+        private readonly ToolStripMenuItem _menuExit = new ToolStripMenuItem();
 
-        private ContextMenuStrip contextMenu;
+        private ContextMenuStrip _contextMenu;
 
         public ContextMenuStrip GetNotifyMenu()
         {
-            if (contextMenu == null)
-            {
+            if (_contextMenu != null) return _contextMenu;
+            _menuExit.Text = @"Exit";
+            _menuExit.Click += MenuExit_Click;
 
-                menu_exit.Text = "Exit";
-                menu_exit.Click += MenuExit_Click;
-
-                contextMenu = new ContextMenuStrip();
-                contextMenu.Items.AddRange(new ToolStripItem[] {
-                    this.menu_sp,
-                    this.menu_exit
-                });
-            }
-            return contextMenu;
+            _contextMenu = new ContextMenuStrip();
+            _contextMenu.Items.AddRange(new ToolStripItem[] {
+                _menuSp,
+                _menuExit
+            });
+            return _contextMenu;
         }
 
-        private void MenuExit_Click(object sender, EventArgs e)
+        private static void MenuExit_Click(object sender, EventArgs e)
         {
             System.Windows.Application.Current.Shutdown();
         }
 
         private void AddLog(string log)
         {
-            if (notifyForm == null)
+            if (_notifyForm == null)
             {
-                notifyForm = new NotifyForm();
+                _notifyForm = new NotifyForm();
             }
-            notifyForm.Show();
-            notifyForm.AddLog(log);
+            _notifyForm.Show();
+            _notifyForm.AddLog(log);
         }
 
     }

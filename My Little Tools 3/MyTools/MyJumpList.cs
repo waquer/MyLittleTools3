@@ -1,136 +1,148 @@
-﻿using System;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.IO;
+using System.Windows;
 using System.Windows.Shell;
 
-namespace MyLittleTools3
+namespace MyLittleTools3.MyTools
 {
-    class MyJumpList
+    internal class MyJumpList
     {
-
-        public ObservableCollection<JumpTask> JTData = new ObservableCollection<JumpTask>();
-        private JumpList jumpList = JumpList.GetJumpList(App.Current);
+        public readonly ObservableCollection<JumpTask> JtData = new ObservableCollection<JumpTask>();
+        private JumpList _jumpList = JumpList.GetJumpList(Application.Current);
 
         public MyJumpList()
         {
-            this.LoadINI();
+            LoadIni();
         }
 
-        public void Add(String path, String name = "", String desc = "")
+        public void Add(string path, string name = "", string desc = "")
         {
-            if (name == "") {
+            if (name == "")
+            {
                 name = Path.GetFileNameWithoutExtension(path);
             }
 
-            if (desc == "") {
+            if (desc == "")
+            {
                 desc = name;
             }
 
-            JumpTask jumpTask = new JumpTask {
+            var jumpTask = new JumpTask
+            {
                 ApplicationPath = path,
                 IconResourcePath = path,
                 Title = name,
                 Description = desc
             };
 
-            this.JTData.Add(jumpTask);
+            JtData.Add(jumpTask);
         }
 
         public void ClearAll()
         {
-            this.JTData.Clear();
-            //this.setJumpList();
+            JtData.Clear();
+            //setJumpList();
         }
 
         public void RemoveAt(int idx)
         {
-            if (idx > -1 && idx < JTData.Count) {
-                this.JTData.RemoveAt(idx);
+            if (idx > -1 && idx < JtData.Count)
+            {
+                JtData.RemoveAt(idx);
             }
         }
 
         public void MoveUp(int idx)
         {
-            if (idx > 0) {
-                JumpTask jt = JTData[idx];
-                JTData.RemoveAt(idx);
-                JTData.Insert(idx - 1, jt);
-            }
+            if (idx <= 0) return;
+            var jt = JtData[idx];
+            JtData.RemoveAt(idx);
+            JtData.Insert(idx - 1, jt);
         }
 
         public void MoveDown(int idx)
         {
-            if (idx < JTData.Count - 1) {
-                JumpTask jt = JTData[idx];
-                JTData.RemoveAt(idx);
-                JTData.Insert(idx + 1, jt);
-            }
+            if (idx >= JtData.Count - 1) return;
+            var jt = JtData[idx];
+            JtData.RemoveAt(idx);
+            JtData.Insert(idx + 1, jt);
         }
 
         public void SetJumpList()
         {
-            if (jumpList != null) {
-                this.jumpList.JumpItems.Clear();
-            } else {
-                this.jumpList = new JumpList();
+            if (_jumpList != null)
+            {
+                _jumpList.JumpItems.Clear();
+            }
+            else
+            {
+                _jumpList = new JumpList();
             }
 
-            if (JTData.Count > 0) {
-                foreach (JumpTask jt in JTData) {
-                    this.jumpList.JumpItems.Add(jt);
+            if (JtData.Count > 0)
+            {
+                foreach (var jt in JtData)
+                {
+                    _jumpList.JumpItems.Add(jt);
                 }
-                this.jumpList.JumpItems.Add(new JumpTask());
+
+                _jumpList.JumpItems.Add(new JumpTask());
             }
-            this.AppendDefault();
-            this.jumpList.Apply();
-            this.SaveINI();
+
+            AppendDefault();
+            _jumpList.Apply();
+            SaveIni();
         }
 
         private void AppendDefault()
         {
-            String appPath = System.Reflection.Assembly.GetEntryAssembly().Location;
+            var appPath = System.Reflection.Assembly.GetEntryAssembly()?.Location;
 
-            String[,] argArray =
+            string[,] argArray =
             {
-                {"修改Hosts","-edithosts"}
+                { "修改Hosts", "-edithosts" }
             };
 
-            for (int i = 0; i < argArray.GetLength(0); i++) {
-                JumpTask jumpTask = new JumpTask {
+            for (var i = 0; i < argArray.GetLength(0); i++)
+            {
+                var jumpTask = new JumpTask
+                {
                     ApplicationPath = appPath,
                     IconResourcePath = appPath,
                     Title = argArray[i, 0],
                     Description = argArray[i, 0],
                     Arguments = argArray[i, 1]
                 };
-                this.jumpList.JumpItems.Add(jumpTask);
+                _jumpList.JumpItems.Add(jumpTask);
             }
         }
 
-        private void LoadINI()
+        private void LoadIni()
         {
-            StringCollection KeyList = new StringCollection();
-            MyIniTool.ReadSection("JumpList", KeyList);
-            foreach (string key in KeyList) {
-                string path = MyIniTool.ReadString("JumpList", key, "");
-                JumpTask jumpTask = new JumpTask {
+            var keyList = new StringCollection();
+            MyIniTool.ReadSection("JumpList", keyList);
+            foreach (var key in keyList)
+            {
+                var path = MyIniTool.ReadString("JumpList", key, "");
+                var jumpTask = new JumpTask
+                {
                     Title = key,
                     Description = key,
                     ApplicationPath = path,
                     IconResourcePath = path
                 };
-                this.JTData.Add(jumpTask);
+                JtData.Add(jumpTask);
             }
         }
 
-        private void SaveINI()
+        private void SaveIni()
         {
             MyIniTool.EraseSection("JumpList");
-            foreach (JumpTask jumpTask in this.JTData) {
+            foreach (var jumpTask in JtData)
+            {
                 MyIniTool.WriteString("JumpList", jumpTask.Title, jumpTask.ApplicationPath);
             }
         }
-
     }
 }

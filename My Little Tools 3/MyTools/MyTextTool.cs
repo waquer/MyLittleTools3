@@ -1,12 +1,11 @@
 ﻿using System.Text.RegularExpressions;
 
-namespace MyLittleTools3
+namespace MyLittleTools3.MyTools
 {
-    class MyTextTool
+    internal static class MyTextTool
     {
         // 字符编码范围
-        private static int[] pyValue = new int[]
-                {
+        private static readonly int[] PyValue = {
                 -20319,-20317,-20304,-20295,-20292,-20283,-20265,-20257,-20242,-20230,-20051,-20036,
                 -20032,-20026,-20002,-19990,-19986,-19982,-19976,-19805,-19784,-19775,-19774,-19763,
                 -19756,-19751,-19746,-19741,-19739,-19728,-19725,-19715,-19540,-19531,-19525,-19515,
@@ -43,8 +42,7 @@ namespace MyLittleTools3
                 };
 
         // 拼音字符
-        private static string[] pyName = new string[]
-                {
+        private static readonly string[] PyName = {
                 "A","Ai","An","Ang","Ao","Ba","Bai","Ban","Bang","Bao","Bei","Ben",
                 "Beng","Bi","Bian","Biao","Bie","Bin","Bing","Bo","Bu","Ba","Cai","Can",
                 "Cang","Cao","Ce","Ceng","Cha","Chai","Chan","Chang","Chao","Che","Chen","Cheng",
@@ -84,40 +82,37 @@ namespace MyLittleTools3
         public static string GetPinyinFull(string hzString)
         {
             // 匹配中文字符
-            Regex regex = new Regex("^[\u4e00-\u9fa5]$");
-            byte[] array = new byte[2];
-            string pyString = "";
-            int chrAsc = 0;
-            int i1 = 0;
-            int i2 = 0;
-            char[] noWChar = hzString.ToCharArray();
+            var regex = new Regex("^[\u4e00-\u9fa5]$");
+            var pyString = "";
+            var noWChar = hzString.ToCharArray();
 
-            for (int j = 0; j < noWChar.Length; j++) {
+            foreach (var t in noWChar)
+            {
                 // 中文字符
-                if (regex.IsMatch(noWChar[j].ToString())) {
-                    array = System.Text.Encoding.Default.GetBytes(noWChar[j].ToString());
-                    i1 = (short)(array[0]);
-                    i2 = (short)(array[1]);
-                    chrAsc = i1 * 256 + i2 - 65536;
+                if (regex.IsMatch(t.ToString())) {
+                    var array = System.Text.Encoding.Default.GetBytes(t.ToString());
+                    int i1 = array[0];
+                    int i2 = array[1];
+                    var chrAsc = i1 * 256 + i2 - 65536;
                     if (chrAsc > 0 && chrAsc < 160) {
-                        pyString += noWChar[j];
+                        pyString += t;
                     } else {
                         // 修正部分文字
                         if (chrAsc == -9254)  // 修正“圳”字
                             pyString += "Zhen";
                         else {
-                            for (int i = (pyValue.Length - 1); i >= 0; i--) {
-                                if (pyValue[i] <= chrAsc) {
-                                    pyString += pyName[i];
-                                    break;
-                                }
+                            for (var i = (PyValue.Length - 1); i >= 0; i--)
+                            {
+                                if (PyValue[i] > chrAsc) continue;
+                                pyString += PyName[i];
+                                break;
                             }
                         }
                     }
                 }
                 // 非中文字符
                 else {
-                    pyString += noWChar[j].ToString();
+                    pyString += t.ToString();
                 }
             }
             return pyString;
@@ -127,75 +122,75 @@ namespace MyLittleTools3
         public static string GetPinyinInit(string CnString)
         {
 
-            string PyChar = "";
-            char[] CnArray = CnString.ToCharArray();
-            for (int i = 0; i < CnArray.Length; i++) {
+            var pyChar = "";
+            var cnArray = CnString.ToCharArray();
+            foreach (var t in cnArray)
+            {
+                var cnChar = t.ToString();
 
-                string CnChar = CnArray[i].ToString();
-
-                byte[] CnByte = System.Text.Encoding.Default.GetBytes(CnChar);
+                var cnByte = System.Text.Encoding.Default.GetBytes(cnChar);
 
                 //如果是字母，则直接返回 
-                if (CnByte.Length == 1) {
-                    PyChar += CnChar.ToUpper();
+                if (cnByte.Length == 1) {
+                    pyChar += cnChar.ToUpper();
                 } else {
-                    int i1 = (short)(CnByte[0]);
-                    int i2 = (short)(CnByte[1]);
+                    int i1 = cnByte[0];
+                    int i2 = cnByte[1];
                     long iCnChar = i1 * 256 + i2;
 
                     // 分段匹配
                     if ((iCnChar >= 45217) && (iCnChar <= 45252)) {
-                        PyChar += "A";
+                        pyChar += "A";
                     } else if ((iCnChar >= 45253) && (iCnChar <= 45760)) {
-                        PyChar += "B";
+                        pyChar += "B";
                     } else if ((iCnChar >= 45761) && (iCnChar <= 46317)) {
-                        PyChar += "C";
+                        pyChar += "C";
                     } else if ((iCnChar >= 46318) && (iCnChar <= 46825)) {
-                        PyChar += "D";
+                        pyChar += "D";
                     } else if ((iCnChar >= 46826) && (iCnChar <= 47009)) {
-                        PyChar += "E";
+                        pyChar += "E";
                     } else if ((iCnChar >= 47010) && (iCnChar <= 47296)) {
-                        PyChar += "F";
+                        pyChar += "F";
                     } else if ((iCnChar >= 47297) && (iCnChar <= 47613)) {
-                        PyChar += "G";
+                        pyChar += "G";
                     } else if ((iCnChar >= 47614) && (iCnChar <= 48118)) {
-                        PyChar += "H";
+                        pyChar += "H";
                     } else if ((iCnChar >= 48119) && (iCnChar <= 49061)) {
-                        PyChar += "J";
+                        pyChar += "J";
                     } else if ((iCnChar >= 49062) && (iCnChar <= 49323)) {
-                        PyChar += "K";
+                        pyChar += "K";
                     } else if ((iCnChar >= 49324) && (iCnChar <= 49895)) {
-                        PyChar += "L";
+                        pyChar += "L";
                     } else if ((iCnChar >= 49896) && (iCnChar <= 50370)) {
-                        PyChar += "M";
+                        pyChar += "M";
                     } else if ((iCnChar >= 50371) && (iCnChar <= 50613)) {
-                        PyChar += "N";
+                        pyChar += "N";
                     } else if ((iCnChar >= 50614) && (iCnChar <= 50621)) {
-                        PyChar += "O";
+                        pyChar += "O";
                     } else if ((iCnChar >= 50622) && (iCnChar <= 50905)) {
-                        PyChar += "P";
+                        pyChar += "P";
                     } else if ((iCnChar >= 50906) && (iCnChar <= 51386)) {
-                        PyChar += "Q";
+                        pyChar += "Q";
                     } else if ((iCnChar >= 51387) && (iCnChar <= 51445)) {
-                        PyChar += "R";
+                        pyChar += "R";
                     } else if ((iCnChar >= 51446) && (iCnChar <= 52217)) {
-                        PyChar += "S";
+                        pyChar += "S";
                     } else if ((iCnChar >= 52218) && (iCnChar <= 52697)) {
-                        PyChar += "T";
+                        pyChar += "T";
                     } else if ((iCnChar >= 52698) && (iCnChar <= 52979)) {
-                        PyChar += "W";
+                        pyChar += "W";
                     } else if ((iCnChar >= 52980) && (iCnChar <= 53640)) {
-                        PyChar += "X";
+                        pyChar += "X";
                     } else if ((iCnChar >= 53689) && (iCnChar <= 54480)) {
-                        PyChar += "Y";
+                        pyChar += "Y";
                     } else if ((iCnChar >= 54481) && (iCnChar <= 55289)) {
-                        PyChar += "Z";
+                        pyChar += "Z";
                     } else {
-                        PyChar += CnChar.ToUpper();
+                        pyChar += cnChar.ToUpper();
                     }
                 }
             }
-            return PyChar;
+            return pyChar;
         }
 
     }

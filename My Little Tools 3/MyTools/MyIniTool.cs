@@ -4,17 +4,19 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
 
-namespace MyLittleTools3
+namespace MyLittleTools3.MyTools
 {
-
-    class MyIniTool
+    internal static class MyIniTool
     {
         [DllImport("kernel32")]
         private static extern bool WritePrivateProfileString(string section, string key, string val, string filePath);
-        [DllImport("kernel32")]
-        private static extern int GetPrivateProfileString(string section, string key, string def, byte[] retVal, int size, string filePath);
 
-        public static String iniFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "My Little Tools.ini");
+        [DllImport("kernel32")]
+        private static extern int GetPrivateProfileString(string section, string key, string def, byte[] retVal,
+            int size, string filePath);
+
+        private static readonly string IniFile =
+            Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "My Little Tools.ini");
 
         /// <summary>
         /// 写INI文件
@@ -24,7 +26,8 @@ namespace MyLittleTools3
         /// <param name="Value"></param>
         public static void WriteString(string Section, string Ident, string Value)
         {
-            if (!WritePrivateProfileString(Section, Ident, Value, iniFile)) {
+            if (!WritePrivateProfileString(Section, Ident, Value, IniFile))
+            {
                 throw (new ApplicationException("写入INI文件出错"));
             }
         }
@@ -38,10 +41,10 @@ namespace MyLittleTools3
         /// <returns></returns>
         public static string ReadString(string Section, string Ident, string Default)
         {
-            Byte[] Buffer = new Byte[65535];
-            int bufLen = GetPrivateProfileString(Section, Ident, Default, Buffer, Buffer.GetUpperBound(0), iniFile);
+            var buffer = new Byte[65535];
+            var bufLen = GetPrivateProfileString(Section, Ident, Default, buffer, buffer.GetUpperBound(0), IniFile);
             //必须设定0（系统默认的代码页）的编码方式，否则无法支持中文
-            string s = Encoding.GetEncoding(0).GetString(Buffer);
+            var s = Encoding.GetEncoding(0).GetString(buffer);
             s = s.Substring(0, bufLen);
             return s.Trim();
         }
@@ -55,11 +58,13 @@ namespace MyLittleTools3
         /// <returns></returns>
         public static int ReadInteger(string Section, string Ident, int Default)
         {
-            string intStr = ReadString(Section, Ident, Convert.ToString(Default));
-            try {
+            var intStr = ReadString(Section, Ident, Convert.ToString(Default));
+            try
+            {
                 return Convert.ToInt32(intStr);
-
-            } catch (Exception ex) {
+            }
+            catch (Exception ex)
+            {
                 Console.WriteLine(ex.Message);
                 return Default;
             }
@@ -83,11 +88,11 @@ namespace MyLittleTools3
         /// <param name="Idents"></param>
         public static void ReadSection(string Section, StringCollection Idents)
         {
-            Byte[] Buffer = new Byte[16384];
+            var buffer = new byte[16384];
             //Idents.Clear();
-            int bufLen = GetPrivateProfileString(Section, null, null, Buffer, Buffer.GetUpperBound(0), iniFile);
+            var bufLen = GetPrivateProfileString(Section, null, null, buffer, buffer.GetUpperBound(0), IniFile);
             //对Section进行解析
-            GetStringsFromBuffer(Buffer, bufLen, Idents);
+            GetStringsFromBuffer(buffer, bufLen, Idents);
         }
 
         /// <summary>
@@ -97,10 +102,9 @@ namespace MyLittleTools3
         public static void ReadSections(StringCollection SectionList)
         {
             //Note:必须得用Bytes来实现，StringBuilder只能取到第一个 Section
-            byte[] Buffer = new byte[65535];
-            int bufLen = 0;
-            bufLen = GetPrivateProfileString(null, null, null, Buffer, Buffer.GetUpperBound(0), iniFile);
-            GetStringsFromBuffer(Buffer, bufLen, SectionList);
+            var buffer = new byte[65535];
+            var bufLen = GetPrivateProfileString(null, null, null, buffer, buffer.GetUpperBound(0), IniFile);
+            GetStringsFromBuffer(buffer, bufLen, SectionList);
         }
 
         /// <summary>
@@ -109,25 +113,24 @@ namespace MyLittleTools3
         /// <param name="Section"></param>
         public static void EraseSection(string Section)
         {
-            if (!WritePrivateProfileString(Section, null, null, iniFile)) {
+            if (!WritePrivateProfileString(Section, null, null, IniFile))
+            {
                 throw (new ApplicationException("清除INI文件出错"));
             }
         }
 
-        private static void GetStringsFromBuffer(Byte[] Buffer, int bufLen, StringCollection Strings)
+        private static void GetStringsFromBuffer(byte[] Buffer, int bufLen, StringCollection Strings)
         {
             Strings.Clear();
-            if (bufLen != 0) {
-                int start = 0;
-                for (int i = 0; i < bufLen; i++) {
-                    if ((Buffer[i] == 0) && ((i - start) > 0)) {
-                        String s = Encoding.GetEncoding(0).GetString(Buffer, start, i - start);
-                        Strings.Add(s);
-                        start = i + 1;
-                    }
-                }
+            if (bufLen == 0) return;
+            var start = 0;
+            for (var i = 0; i < bufLen; i++)
+            {
+                if ((Buffer[i] != 0) || ((i - start) <= 0)) continue;
+                var s = Encoding.GetEncoding(0).GetString(Buffer, start, i - start);
+                Strings.Add(s);
+                start = i + 1;
             }
         }
-
     }
 }

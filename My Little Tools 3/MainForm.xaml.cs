@@ -1,69 +1,65 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Forms;
+using MyLittleTools3.MyTools;
+using Application = System.Windows.Application;
 
 namespace MyLittleTools3
 {
     /// <summary>
     /// MainWindow.xaml 的交互逻辑
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow
     {
-
-        MyJumpList myJumpList = new MyJumpList();
-        MyFileTool myFileTool = new MyFileTool();
-        NotifyIcon notifyIcon = new NotifyIcon();
-        NotifyMenu notifyMenu = new NotifyMenu();
+        private readonly MyJumpList _myJumpList = new MyJumpList();
+        private readonly MyFileTool _myFileTool = new MyFileTool();
+        private readonly NotifyIcon _notifyIcon = new NotifyIcon();
+        private readonly NotifyMenu _notifyMenu = new NotifyMenu();
 
         public MainWindow(int tabidx = 0)
         {
             InitializeComponent();
-            btnUpdateSelf.Content = App.ResourceAssembly.GetName(false).Version;
-            lsvJumpList.ItemsSource = myJumpList.JTData;
-            ListFiles.ItemsSource = myFileTool.fileList;
-            tabMain.SelectedIndex = tabidx;
-            notifyIcon.Icon = System.Drawing.Icon.ExtractAssociatedIcon(System.Windows.Forms.Application.ExecutablePath);
-            notifyIcon.ContextMenuStrip = notifyMenu.GetNotifyMenu();
-            notifyIcon.MouseClick += NotifyIcon_Click;
-            notifyIcon.Visible = true;
+            BtnUpdateSelf.Content = Application.ResourceAssembly.GetName(false).Version;
+            LsvJumpList.ItemsSource = _myJumpList.JtData;
+            ListFiles.ItemsSource = _myFileTool.FileList;
+            TabMain.SelectedIndex = tabidx;
+            _notifyIcon.Icon = System.Drawing.Icon.ExtractAssociatedIcon(System.Windows.Forms.Application.ExecutablePath);
+            _notifyIcon.ContextMenuStrip = _notifyMenu.GetNotifyMenu();
+            _notifyIcon.MouseClick += NotifyIcon_Click;
+            _notifyIcon.Visible = true;
         }
 
         /* 更新程序 */
         private void UpdateSelf(object sender, RoutedEventArgs e)
         {
-            string filepath = MyIniTool.ReadString("Appconfig", "filepath", "");
+            var filepath = MyIniTool.ReadString("Appconfig", "filepath", "");
             if (filepath.Length > 0) {
-                myFileTool.DoUpdate(filepath);
             } else {
-                OpenFileDialog OpenFileD = new OpenFileDialog();
-                if (OpenFileD.ShowDialog() == System.Windows.Forms.DialogResult.OK) {
-                    filepath = OpenFileD.FileName;
-                    MyIniTool.WriteString("Appconfig", "filepath", filepath);
-                    myFileTool.DoUpdate(filepath);
-                }
+                var openFileD = new OpenFileDialog();
+                if (openFileD.ShowDialog() != System.Windows.Forms.DialogResult.OK) return;
+                filepath = openFileD.FileName;
+                MyIniTool.WriteString("Appconfig", "filepath", filepath);
             }
+
+            _myFileTool.DoUpdate(filepath);
         }
 
         /* 设置窗体总在最上状态 */
         private void CbOnTop_Click(object sender, RoutedEventArgs e)
         {
-            this.Topmost = (cbOnTop.IsChecked == true) ? true : false;
+            Topmost = CbOnTop.IsChecked == true;
         }
 
         /* 最小化时显示隐藏任务栏图标 */
         private void WinMain_StateChanged(object sender, EventArgs e)
         {
-            if (WindowState == WindowState.Minimized) {
-                ShowInTaskbar = false;
-            } else {
-                ShowInTaskbar = true;
-            }
+            ShowInTaskbar = WindowState != WindowState.Minimized;
         }
 
         private void NotifyIcon_Click(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Right) {
-                notifyIcon.ContextMenuStrip.Show();
+                _notifyIcon.ContextMenuStrip.Show();
             } else {
                 WindowState = WindowState.Normal;
             }
