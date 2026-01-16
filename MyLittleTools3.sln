@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyLittleTools3", "MyLittleTools3\MyLittleTools3.csproj", "{4AF25C2B-69BA-4C90-9CB6-E8B0005E3207}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyLittleTools3", "MyLittleTools3.csproj", "{4AF25C2B-69BA-4C90-9CB6-E8B0005E3207}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
